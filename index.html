@@ -1,0 +1,4758 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#107c41" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="researchtalk" />
+  <meta name="description" content="연구사업단 일정, 할 일, 단체 대화와 개인 대화" />
+  <meta name="referrer" content="no-referrer" />
+  <title>연구사업단_과제관리_월별현황.xlsx · researchtalk</title>
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.jpg?v=20260929" />
+  <link rel="icon" type="image/jpeg" href="./icons/favicon-32.jpg?v=20260929" sizes="32x32" />
+  <link rel="stylesheet" href="./styles.css?ui=compact-20260925" />
+
+  <script defer src="./vendor/supabase.js?ui=compact-20260925"></script>
+  <script defer src="./dates.js?ui=compact-20260925"></script>
+  <script defer src="./config.js?ui=compact-20260925"></script>
+  <script defer src="./storage.js?ui=compact-20260925"></script>
+  <script defer src="./summary.js?ui=compact-20260925"></script>
+  <script defer src="./app.js?ui=compact-20260925"></script>
+
+<style id="xl-compact-style">
+:root{
+  --bg:#f6f6f6;
+  --paper:#fff;
+  --ink:#202020;
+  --muted:#757575;
+  --line:#d5d5d5;
+  --primary:#107c41;
+  --soft:#e9f2eb;
+  --rose:#c14f65;
+  --green:#107c41;
+  font-family:"Malgun Gothic","맑은 고딕",Arial,sans-serif;
+}
+
+body,.app-frame,.auth-screen,.chat-scroll{
+  background-image:none!important;
+}
+
+.app-frame{background:#fff}
+
+.panel,.room-chip,.message-bubble,.mine .message-bubble{
+  border-radius:2px;
+  box-shadow:none;
+}
+
+.xl-chrome,.xl-formula,#xl-sheet,.xl-letters,
+.xl-pane-tools,.xl-pane-foot,.xl-mobile-close{
+  display:none;
+}
+
+.app-header{
+  background:#107c41;
+  color:#fff;
+  border:0;
+}
+
+.brand{color:#fff}
+
+.brand-mark{
+  border-radius:2px;
+  background:#fff;
+  color:#107c41;
+}
+
+.xl-quick,.xl-filename,.xl-window,.xl-title-search{
+  display:none;
+}
+
+.app-header .avatar{
+  background:#e0eee3;
+  color:#075c2e;
+}
+
+.connection-line{background:#f4f4f4}
+.bottom-nav{background:#f4f4f4}
+.bottom-nav button{border-radius:0}
+
+.bottom-nav button[aria-current=page]{
+  background:#fff;
+  border-bottom:3px solid #107c41;
+}
+
+.xl-more{
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  flex-shrink:0;
+  max-height:30%;
+  overflow:auto;
+}
+
+.xl-more summary{
+  padding:9px 14px;
+  min-height:44px;
+  font-size:12px;
+  cursor:pointer;
+  color:#555;
+}
+
+.xl-unread{
+  border:1px solid #dfb9bf;
+  color:#b42f42;
+  background:#fff;
+  font-size:12px;
+  padding:5px 8px;
+  border-radius:2px;
+}
+
+.xl-mobile-open{
+  display:block;
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  color:#107c41;
+  margin:8px 0;
+}
+
+.chat-scroll{background:#f8f8f8}
+.mine .message-bubble{background:#eef6ef}
+.calendar-key{gap:4px 8px}
+.xl-pivot-scroll{min-height:0}
+.xl-status-note{display:none}
+.composer textarea{min-width:0;flex:1}
+
+@media(min-width:1100px){
+  body{
+    font-size:13px;
+    line-height:1.45;
+    background:#fff;
+  }
+
+  .app-frame{
+    max-width:none;
+    border:0;
+    box-shadow:none;
+    height:100vh;
+    height:var(--app-height,100dvh);
+  }
+
+  /* 초록색 제목 표시줄 */
+  .app-header{
+    height:36px;
+    min-height:36px;
+    padding:0 10px;
+    gap:16px;
+    justify-content:flex-start;
+    flex-shrink:0;
+  }
+
+  .brand{min-height:26px;gap:0}
+  .brand>span:last-child{display:none}
+
+  .brand-mark{
+    font-family:Arial,sans-serif;
+    width:23px;
+    height:25px;
+    font-size:18px;
+    font-weight:700;
+  }
+
+  .app-header .avatar{
+    width:25px;
+    height:25px;
+    min-height:25px;
+    font-size:12px;
+    border:1px solid #dce9df;
+    background:#ffffff15;
+    color:white;
+  }
+
+  .xl-quick,.xl-window{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    white-space:nowrap;
+    font-size:13px;
+  }
+
+  .xl-toggle{
+    display:inline-block;
+    width:29px;
+    height:15px;
+    border:1px solid white;
+    border-radius:12px;
+    vertical-align:middle;
+    margin-inline:4px;
+  }
+
+  .xl-toggle:before{
+    content:"";
+    display:block;
+    width:9px;
+    height:9px;
+    margin:2px;
+    background:white;
+    border-radius:50%;
+  }
+
+  .xl-filename{
+    display:block;
+    white-space:nowrap;
+    font-size:13px;
+  }
+
+  .xl-title-search{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex:1;
+    max-width:580px;
+    min-width:80px;
+    height:27px;
+    padding:0 10px;
+    background:#ffffff24;
+    border:1px solid #ffffff25;
+    border-radius:5px;
+    color:#f5fff8;
+    font-size:13px;
+  }
+
+  .xl-title-search .icon{width:17px;height:17px}
+  .xl-window{margin-left:auto;gap:25px;font-size:15px}
+  .xl-window span:first-child{font-size:12px}
+
+  /* 엑셀 메뉴와 리본 */
+  .xl-chrome{
+    display:block;
+    flex-shrink:0;
+    background:#fff;
+    color:#171717;
+  }
+
+  .xl-menubar{
+    height:34px;
+    display:flex;
+    align-items:center;
+    padding:0 12px;
+    gap:2px;
+    border-bottom:1px solid #eee;
+  }
+
+  .xl-menubar button{
+    font-size:13px;
+    padding:0 13px;
+    min-height:30px;
+    height:30px;
+    white-space:nowrap;
+    border-radius:0;
+    position:relative;
+  }
+
+  .xl-menubar .selected{
+    color:#107c41;
+    font-weight:bold;
+  }
+
+  .xl-menubar .selected:after{
+    content:"";
+    position:absolute;
+    bottom:1px;
+    left:12px;
+    right:12px;
+    height:3px;
+    background:#107c41;
+    border-radius:2px;
+  }
+
+  .xl-menubar .xl-share{
+    background:#107c41;
+    color:#fff;
+    margin-left:5px;
+    border-radius:3px;
+    height:26px;
+    min-height:26px;
+  }
+
+  .xl-menubar .xl-comment{
+    margin-left:auto;
+    border:1px solid #ccc;
+    border-radius:3px;
+    height:26px;
+    min-height:26px;
+  }
+
+  .xl-chrome button:disabled{opacity:1;color:inherit}
+  .xl-chrome button{cursor:default}
+  .xl-menubar .selected:disabled{color:#107c41}
+  .xl-menubar .xl-share:disabled{color:#fff}
+
+  .xl-ribbon-scroll{
+    overflow-x:auto;
+    scrollbar-width:thin;
+    scrollbar-color:#c4c4c4 #fff;
+  }
+
+  .xl-ribbon{
+    display:flex;
+    height:102px;
+    min-width:1420px;
+    padding:7px 0 2px;
+    overflow:hidden;
+  }
+
+  .xl-group{
+    position:relative;
+    display:flex;
+    gap:7px;
+    padding:0 10px 20px;
+    border-right:1px solid #ddd;
+    flex-shrink:0;
+    font-size:12px;
+  }
+
+  .xl-group>small{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    text-align:center;
+    color:#858585;
+    font-size:11px;
+  }
+
+  .xl-group>small:after{
+    content:"⌁";
+    position:absolute;
+    right:5px;
+    color:#777;
+  }
+
+  .xl-group button{
+    min-height:23px;
+    padding:1px 3px;
+    font-size:13px;
+    line-height:1.4;
+    border-radius:0;
+    text-align:left;
+  }
+
+  .xl-group .big{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    justify-content:center;
+    gap:3px;
+    min-width:41px;
+  }
+
+  .xl-group .big b{
+    font-size:23px;
+    font-weight:400;
+    line-height:1.2;
+    color:#597995;
+  }
+
+  .xl-stack{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:1px;
+  }
+
+  .xl-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+    min-height:29px;
+  }
+
+  .xl-box{
+    border:1px solid #aaa;
+    background:#fff;
+    border-radius:1px;
+    padding:3px 7px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    height:25px;
+    font-size:12px;
+  }
+
+  .xl-font{font-size:16px}
+  .xl-font .bold{font-weight:bold}
+  .xl-font .under{text-decoration:underline}
+  .xl-font .color{border-bottom:3px solid #f13642}
+  .xl-font .fill{border-bottom:3px solid #f3d76d}
+
+  .xl-undo{width:53px;justify-content:center;color:#47719c}
+  .xl-clip{width:145px}
+  .xl-fonts{width:246px}
+  .xl-align{width:274px}
+  .xl-number{width:154px}
+  .xl-styles{width:201px}
+  .xl-cells{width:93px}
+  .xl-edit{flex:1;border:0}
+
+  /* 수식 표시줄 */
+  .xl-formula{
+    display:flex;
+    align-items:center;
+    height:28px;
+    min-height:28px;
+    border-block:1px solid #cfcfcf;
+    background:#fff;
+    gap:12px;
+    font-size:12px;
+  }
+
+  #xl-cell{
+    width:114px;
+    border-right:1px solid #ccc;
+    height:26px;
+    line-height:26px;
+    padding:0 10px;
+    flex-shrink:0;
+  }
+
+  #xl-cell:after{content:"▾";float:right;color:#777}
+  .xl-formula>span{color:#aaa}
+
+  .xl-formula em{
+    font:bold italic 16px Georgia,serif;
+    color:#555;
+  }
+
+  .xl-formula output{
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    flex:1;
+    border-left:1px solid #eee;
+    padding-left:10px;
+  }
+
+  /* A–G / H–I / J */
+  #workspace:not([hidden]){
+    display:grid;
+    grid-template-columns:
+      minmax(0,66.5fr)
+      minmax(0,15.3fr)
+      minmax(0,18.2fr);
+    grid-template-rows:minmax(0,1fr);
+    position:relative;
+    gap:0;
+    overflow:hidden;
+    background:#fff;
+  }
+
+  /* 왼쪽 연구사업 표 */
+  #xl-sheet{
+    display:flex;
+    grid-column:1;
+    grid-row:1;
+    min-height:0;
+    min-width:0;
+    flex-direction:column;
+    border-right:1px solid #bbb;
+  }
+
+  .xl-table-scroll{
+    flex:1;
+    min-height:0;
+    overflow:auto;
+    scrollbar-width:thin;
+    background:repeating-linear-gradient(
+      #fff 0 23px,
+      #d8d8d8 23px 24px
+    );
+  }
+
+  .xl-table{
+    border-collapse:separate;
+    border-spacing:0;
+    table-layout:fixed;
+    width:100%;
+    font-size:12px;
+    color:#252525;
+    background:white;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .xl-table th,.xl-table td{
+    height:24px;
+    padding:0 8px;
+    border-right:1px solid #d6d6d6;
+    border-bottom:1px solid #d6d6d6;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    font-weight:400;
+  }
+
+  .xl-table thead th{
+    position:sticky;
+    top:0;
+    height:24px;
+    background:#fafafa;
+    color:#626262;
+    text-align:center;
+    z-index:2;
+    font-size:12px;
+  }
+
+  .xl-table thead th:first-child{background:#ebeeee}
+
+  .xl-table tbody th{
+    background:#fafafa;
+    color:#777;
+    text-align:center;
+    padding:0;
+    font-size:12px;
+  }
+
+  .xl-table tr:first-child td{
+    background:#fafafa;
+    font-size:11px;
+    color:#454545;
+  }
+
+  .xl-table td:nth-child(n+4):nth-child(-n+7){
+    text-align:right;
+  }
+
+  .xl-table td:last-child{text-align:center}
+
+  .xl-table td[tabindex="0"]{
+    outline:2px solid #107c41;
+    outline-offset:-2px;
+  }
+
+  .xl-table td:focus{box-shadow:none}
+  .xl-table .up{color:#cb5267}
+  .xl-table .down{color:#567aac}
+  .xl-table .xl-header{color:#444!important}
+
+  .xl-ticker{
+    height:26px;
+    min-height:26px;
+    padding:3px 9px;
+    border-block:1px solid #d5d5d5;
+    overflow:hidden;
+    white-space:nowrap;
+    font-size:11px;
+    color:#777;
+    background:#fff;
+  }
+
+  .xl-ticker b{
+    font-weight:400;
+    color:#cb5267;
+    margin-right:20px;
+  }
+
+  .xl-sheet-tools{
+    height:38px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 6px;
+    background:#fafafa;
+    flex-shrink:0;
+    overflow:hidden;
+  }
+
+  .xl-sheet-tools input{
+    min-height:28px;
+    height:28px;
+    padding:4px 7px;
+    border-radius:0;
+    background:white;
+    font-size:12px;
+    width:225px;
+    max-width:35%;
+  }
+
+  .xl-sheet-tools button{
+    min-height:28px;
+    height:28px;
+    padding:3px 11px;
+    border:1px solid #ccc;
+    border-radius:0;
+    font-size:11px;
+    white-space:nowrap;
+  }
+
+  .xl-sheet-tools .active{
+    font-weight:bold;
+    background:#fff;
+    border-bottom:2px solid #107c41;
+  }
+
+  .xl-sheet-tools small{
+    margin-left:auto;
+    color:#777;
+    font-size:10px;
+    white-space:nowrap;
+  }
+
+  /* H–I 피벗 패널 */
+  #workspace #page-home{
+    display:flex!important;
+    grid-column:2;
+    grid-row:1;
+    flex-direction:column;
+    overflow:hidden;
+    padding:0;
+    min-width:0;
+    min-height:0;
+    background:#fff;
+    border-right:1px solid #bbb;
+  }
+
+  .xl-letters{
+    display:flex;
+    align-items:center;
+    flex-shrink:0;
+    height:24px;
+    min-height:24px;
+    background:#fafafa;
+    border-bottom:1px solid #cfcfcf;
+    text-align:center;
+    font-size:12px;
+    color:#626262;
+  }
+
+  .xl-letters span{
+    flex:1;
+    border-right:1px solid #d5d5d5;
+  }
+
+  .xl-letters span:last-child{border:0}
+
+  .xl-pane-tools{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:26px;
+    padding:3px 7px;
+    border-bottom:1px solid #d8d8d8;
+    background:#f5f8f6;
+    font-size:11px;
+  }
+
+  .xl-pane-tools strong{font-size:11px}
+  .xl-pane-tools span{color:#777}
+
+  .xl-pivot-scroll{
+    flex:1;
+    overflow-y:auto;
+    scrollbar-width:thin;
+    padding:6px;
+    background-image:
+      linear-gradient(#e5e7e94d 1px,transparent 1px),
+      linear-gradient(90deg,#e5e7e94d 1px,transparent 1px);
+    background-size:28px 24px;
+  }
+
+  #page-home .today-heading{display:none}
+
+  #page-home .panel{
+    padding:7px;
+    margin:0 0 8px;
+    border:1px solid #cfcfcf;
+    border-radius:0;
+    background:#fff;
+    box-shadow:none;
+    position:relative;
+  }
+
+  #page-home .calendar-panel{
+    border-top:2px solid #107c41;
+  }
+
+  #page-home .panel:after{
+    content:"";
+    position:absolute;
+    bottom:-3px;
+    right:-3px;
+    width:5px;
+    height:5px;
+    background:#fff;
+    border:1px solid #aeb5b0;
+    pointer-events:none;
+  }
+
+  #page-home .section-heading{
+    gap:3px;
+    padding:0;
+    flex-wrap:wrap;
+  }
+
+  #page-home h2{
+    font-size:12px;
+    letter-spacing:0;
+    line-height:1.5;
+  }
+
+  #page-home .eyebrow{
+    font-size:10px;
+    color:#858585;
+    margin-bottom:0;
+  }
+
+  #page-home button{border-radius:1px}
+
+  #page-home .text-button{
+    min-height:24px;
+    padding:2px 3px;
+    font-size:10px;
+  }
+
+  #page-home .icon-button{
+    width:21px;
+    min-width:21px;
+    min-height:24px;
+    font-size:20px;
+  }
+
+  #page-home .soft-button{
+    min-height:24px;
+    padding:2px 5px;
+    font-size:10px;
+  }
+
+  #page-home .weekdays,
+  #page-home .calendar-grid{
+    grid-template-columns:repeat(7,minmax(0,1fr));
+  }
+
+  #page-home .weekdays{
+    font-size:10px;
+    padding:7px 0 3px;
+  }
+
+  #page-home .calendar-day{
+    min-width:0;
+    min-height:27px;
+    height:27px;
+    padding:0 0 3px;
+    font-size:11px;
+    border-radius:0;
+  }
+
+  #page-home .calendar-day.today{
+    box-shadow:inset 0 0 0 1px #87a895;
+  }
+
+  #page-home .calendar-day.selected{box-shadow:none}
+
+  #page-home .calendar-key{
+    font-size:9px;
+    gap:3px 6px;
+    padding:6px 0 0;
+    justify-content:flex-start;
+  }
+
+  .calendar-legend i{width:5px;height:5px}
+
+  #page-home .calendar-day.has-event:after,
+  #page-home .calendar-day.has-my-event:before{
+    width:4px;
+    height:4px;
+    bottom:3px;
+  }
+
+  #page-home .count-badge{
+    font-size:10px;
+    padding:1px 4px;
+    border-radius:1px;
+  }
+
+  #page-home .todo-list{margin:5px 0}
+  #page-home .todo-row{padding:2px 0;gap:2px}
+
+  #page-home .todo-toggle{
+    min-height:27px;
+    font-size:11px;
+    gap:6px;
+    padding:2px 0;
+  }
+
+  #page-home .check-box{
+    width:14px;
+    height:14px;
+    border-radius:0;
+    border-width:1px;
+  }
+
+  #page-home .check-box .icon{width:12px;height:12px}
+
+  #page-home .delete-button{
+    min-height:25px;
+    width:22px;
+    min-width:22px;
+  }
+
+  #page-home .delete-button .icon{width:12px;height:12px}
+  #page-home .inline-form{gap:3px}
+
+  #page-home .inline-form input{
+    min-height:27px;
+    height:27px;
+    border-radius:0;
+    font-size:11px;
+    padding:3px 5px;
+    background:white;
+  }
+
+  #page-home .square-button{
+    min-height:27px;
+    min-width:25px;
+    width:25px;
+    font-size:18px;
+  }
+
+  #page-home .empty{
+    font-size:11px;
+    padding:12px 2px;
+    line-height:1.6;
+  }
+
+  #page-home .event-list{margin-top:6px}
+
+  #page-home .event-row{
+    gap:5px;
+    padding:7px 0;
+    flex-wrap:wrap;
+  }
+
+  #page-home .event-date{
+    font-size:9px;
+    min-width:27px;
+    padding:2px;
+    border-radius:0;
+  }
+
+  #page-home .event-date strong{font-size:14px}
+  #page-home .event-content strong{font-size:11px}
+  #page-home .event-content p{font-size:10px}
+
+  #page-home .event-edit{
+    font-size:10px;
+    min-height:22px;
+    min-width:25px;
+    padding:2px;
+  }
+
+  #page-home .selected-events{
+    font-size:10px;
+    padding:4px;
+    border-radius:0;
+    margin-top:5px;
+  }
+
+  .xl-pane-foot{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    height:38px;
+    min-height:38px;
+    padding:3px 6px;
+    background:#fafafa;
+    border-top:1px solid #ccc;
+    flex-shrink:0;
+  }
+
+  .xl-pane-foot button{
+    min-height:28px;
+    font-size:10px;
+    border-radius:0;
+    white-space:nowrap;
+    padding:2px 6px;
+  }
+
+  .xl-pane-foot .active{
+    border-bottom:2px solid #107c41;
+    color:#107c41;
+    font-weight:bold;
+  }
+
+  /* J 대화 패널 */
+  #workspace #page-chat{
+    display:flex!important;
+    grid-column:3;
+    grid-row:1;
+    min-width:0;
+    min-height:0;
+    padding:0;
+    background:#fafafa;
+    border:0;
+    overflow:hidden;
+  }
+
+  .chat-top{
+    padding:4px 7px 0;
+    border:0;
+    background:#fff;
+  }
+
+  .chat-top .section-heading{gap:4px;flex-wrap:wrap}
+  .chat-top h1{font-size:11px;letter-spacing:0}
+
+  .chat-top .soft-button{
+    min-height:23px;
+    padding:2px 5px;
+    font-size:10px;
+    border-radius:1px;
+    background:#f1f6f2;
+  }
+
+  .room-list{
+    gap:4px;
+    margin:3px -7px 0;
+    padding:0 7px 4px;
+  }
+
+  .room-chip{
+    min-height:25px;
+    padding:2px 7px;
+    font-size:11px;
+    border-radius:0;
+  }
+
+  .unread-dot{
+    width:6px;
+    height:6px;
+    margin-left:4px;
+    box-shadow:none;
+  }
+
+  .chat-context{
+    padding:5px 7px;
+    gap:3px;
+    flex-wrap:wrap;
+    background:#f5f8f6;
+  }
+
+  .chat-context strong{font-size:11px}
+  .chat-context p{font-size:9px}
+
+  .chat-context .text-button{
+    min-height:22px;
+    font-size:10px;
+    padding:2px 0;
+  }
+
+  .xl-more summary{
+    min-height:23px;
+    padding:3px 7px;
+    font-size:10px;
+    color:#777;
+  }
+
+  .xl-more .chat-tools{padding:0 4px;gap:0}
+
+  .xl-more .chat-tools input{
+    min-height:27px;
+    height:27px;
+    font-size:11px;
+    width:116px;
+    padding:2px;
+  }
+
+  .xl-more .text-button{
+    min-height:24px;
+    font-size:10px;
+    padding:2px 4px;
+  }
+
+  .xl-more .archive-state{
+    font-size:10px;
+    padding:2px 7px;
+    text-align:left;
+  }
+
+  .xl-more .summary-open{
+    min-height:24px;
+    font-size:10px;
+    padding:2px 7px;
+  }
+
+  .xl-unread{
+    min-height:23px;
+    font-size:10px;
+    padding:2px 5px;
+    border:0;
+    flex-shrink:0;
+  }
+
+  .chat-scroll{
+    padding:8px;
+    scrollbar-width:thin;
+    background:#fafafa;
+  }
+
+  .chat-messages{gap:8px}
+
+  .message,.message.mine{
+    display:block;
+    background:#fff;
+    border:1px solid #dcdcdc;
+    padding:7px 8px;
+  }
+
+  .message .avatar{display:none}
+
+  .message-main{
+    max-width:none;
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:3px 5px;
+  }
+
+  .message-author,.message.mine .message-author{
+    grid-column:1;
+    grid-row:1;
+    text-align:left;
+    font-size:11px;
+    font-weight:700;
+    color:#107c41;
+    margin:0;
+    overflow-wrap:anywhere;
+  }
+
+  .message-bubble,.mine .message-bubble{
+    grid-column:1/-1;
+    grid-row:2;
+    font-size:12px;
+    line-height:1.5;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    color:#252525;
+  }
+
+  .message-meta,.mine .message-meta{
+    grid-column:2;
+    grid-row:1;
+    justify-content:flex-end;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    font-size:9px;
+    margin:0;
+    gap:3px;
+    color:#8b9398;
+  }
+
+  .message-delete{
+    min-height:15px;
+    height:15px;
+    font-size:9px;
+    padding:0;
+    color:#888;
+  }
+
+  .chat-scroll .empty{
+    font-size:12px;
+    padding:28px 5px;
+    color:#888;
+  }
+
+  .unread-divider{
+    font-size:10px;
+    padding:5px;
+    margin:3px 0;
+    border-radius:0;
+  }
+
+  .summary-card{
+    font-size:11px;
+    border-radius:0;
+    padding:8px;
+  }
+
+  .summary-card h3,.summary-card p{font-size:11px}
+
+  .new-message-hint{
+    min-height:25px;
+    font-size:10px;
+    margin:0 7px 5px;
+    padding:4px 7px;
+    border-radius:1px;
+  }
+
+  .composer-wrap{
+    padding:6px 7px;
+    background:#fafafa;
+  }
+
+  .composer{gap:5px}
+
+  .composer textarea{
+    min-height:31px;
+    height:31px;
+    padding:5px 7px;
+    font-size:12px;
+    line-height:1.5;
+    border-radius:2px;
+    background:#fff;
+  }
+
+  .send-button{
+    min-width:30px;
+    width:30px;
+    min-height:31px;
+    height:31px;
+    border-radius:2px;
+    background:#e9efeb;
+    color:#107c41;
+  }
+
+  .send-button .icon{width:17px;height:17px}
+
+  .composer-note{
+    font-size:9px;
+    margin:4px 0 0;
+    line-height:1.4;
+  }
+
+  .composer-wrap .field-error{font-size:10px}
+  .composer-wrap .field-error:not(:empty){margin:3px 0}
+
+  /* 하단 시트 탭과 상태 표시줄 */
+  .bottom-nav{
+    height:31px;
+    min-height:31px;
+    display:flex;
+    align-items:stretch;
+    justify-content:flex-start;
+    padding:0 7px;
+    border-block:1px solid #c9c9c9;
+    gap:2px;
+    z-index:10;
+  }
+
+  .bottom-nav:before{
+    content:"‹　 ›";
+    width:42px;
+    color:#777;
+    line-height:29px;
+  }
+
+  .bottom-nav button{
+    flex-direction:row;
+    gap:4px;
+    padding:0 15px;
+    min-height:29px;
+    font-size:11px;
+    white-space:nowrap;
+  }
+
+  .bottom-nav .icon{display:none}
+  .bottom-nav .unread-dot{position:static;margin-left:2px}
+  .bottom-nav .request-badge{top:0;left:auto;right:0}
+
+  .bottom-nav:after{
+    content:"워크북　 │　 사이드바";
+    margin-left:auto;
+    line-height:29px;
+    color:#107c41;
+    font-size:10px;
+    font-weight:bold;
+    padding:0 4px;
+  }
+
+  .connection-line{
+    order:10;
+    min-height:22px;
+    height:22px;
+    padding:0 9px;
+    justify-content:flex-start;
+    border-top:1px solid #eee;
+    font-size:10px;
+    gap:7px;
+    color:#666;
+  }
+
+  .connection-line .text-button{
+    min-height:20px;
+    font-size:10px;
+    padding:0 4px;
+  }
+
+  .xl-status-note{
+    display:inline;
+    margin-left:auto;
+    font-size:10px;
+    color:#888;
+  }
+
+  .unread-setup{
+    min-height:25px;
+    font-size:11px;
+    padding:4px 10px;
+  }
+
+  #workspace.xl-members-open #page-members{
+    display:block!important;
+    position:absolute;
+    inset:0;
+    z-index:15;
+    padding:22px;
+    background:#f7f8f7;
+    overflow:auto;
+  }
+
+  #workspace.xl-members-open #page-home,
+  #workspace.xl-members-open #page-chat,
+  #workspace.xl-members-open #xl-sheet{
+    visibility:hidden;
+  }
+
+  .members-page>*{
+    max-width:720px;
+    margin-inline:auto;
+  }
+
+  .xl-mobile-open{display:none}
+  .xl-mobile-close{display:none!important}
+}
+
+@media(max-width:1099px){
+  #workspace{position:relative}
+  .xl-pivot-scroll{overflow:visible}
+
+  .xl-mobile-close{
+    display:block;
+    flex-shrink:0;
+    background:#107c41;
+    color:#fff;
+    border-radius:0;
+    text-align:right;
+    padding:8px 16px;
+  }
+
+  #xl-sheet.xl-open{
+    display:flex;
+    position:absolute;
+    inset:0;
+    z-index:20;
+    flex-direction:column;
+    background:#fff;
+    min-height:0;
+  }
+
+  .xl-table-scroll{
+    flex:1;
+    min-height:0;
+    overflow:auto;
+  }
+
+  .xl-table{
+    min-width:900px;
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+
+  .xl-table td,.xl-table th{
+    height:32px;
+    white-space:nowrap;
+    border:1px solid #ddd;
+    padding:4px 8px;
+    font-weight:400;
+  }
+
+  .xl-table th{background:#f6f6f6}
+
+  .xl-sheet-tools{
+    padding:8px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+  }
+
+  .xl-sheet-tools input{font-size:16px}
+  .xl-sheet-tools small{color:#777}
+  .xl-ticker{font-size:11px;padding:8px}
+  .xl-more{max-height:45%;overflow:auto}
+}
+</style>
+
+<style id="workspace-theme-style">
+/* =========================================================
+   작업 배경 전환: Excel ↔ 한글 2024
+   - 기본값은 기존 Excel 화면
+   - 선택값은 localStorage에 저장
+   ========================================================= */
+.workspace-mode-switch{
+  display:flex;
+  align-items:center;
+  gap:2px;
+  padding:2px;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:6px;
+  background:rgba(255,255,255,.12);
+  flex-shrink:0;
+}
+.workspace-mode-switch button{
+  min-height:24px;
+  height:24px;
+  padding:0 9px;
+  border:0;
+  border-radius:4px;
+  background:transparent;
+  color:inherit;
+  font:600 11px/1 "Malgun Gothic","맑은 고딕",Arial,sans-serif;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.workspace-mode-switch button[aria-pressed="true"]{
+  background:#fff;
+  color:#107c41;
+  box-shadow:0 1px 3px rgba(0,0,0,.16);
+}
+
+/* 한글용 리본은 Excel 모드에서는 숨김 */
+.hwp-chrome{display:none}
+
+@media(min-width:1100px){
+  /* ------------------ 한글 제목 표시줄 ------------------ */
+  body[data-workspace-theme="hwp"]{
+    --primary:#1683cf;
+    --green:#1683cf;
+    --soft:#edf6fc;
+  }
+
+  body[data-workspace-theme="hwp"] .app-header{
+    background:linear-gradient(#f9fbfd,#edf3f8);
+    color:#26333d;
+    border-bottom:1px solid #cfd7df;
+  }
+
+  body[data-workspace-theme="hwp"] .app-header .brand-mark{
+    background:#1683cf;
+    color:#fff;
+    border-radius:4px;
+  }
+
+  body[data-workspace-theme="hwp"] .app-header .avatar{
+    background:#fff;
+    color:#4c5963;
+    border:1px solid #cbd4dc;
+  }
+
+  body[data-workspace-theme="hwp"] .xl-quick{
+    color:#64717b;
+  }
+
+  body[data-workspace-theme="hwp"] .xl-title-search{
+    display:none;
+  }
+
+  body[data-workspace-theme="hwp"] .workspace-mode-switch{
+    border-color:#cbd5dd;
+    background:#fff;
+    color:#45525d;
+  }
+
+  body[data-workspace-theme="hwp"] .workspace-mode-switch button[aria-pressed="true"]{
+    background:#1683cf;
+    color:#fff;
+    box-shadow:none;
+  }
+
+  /* 기존 Excel 리본/수식줄 숨김 */
+  body[data-workspace-theme="hwp"] .xl-chrome,
+  body[data-workspace-theme="hwp"] .xl-formula{
+    display:none!important;
+  }
+
+  /* ------------------ 한글 2024 스타일 리본 ------------------ */
+  body[data-workspace-theme="hwp"] .hwp-chrome{
+    display:block;
+    flex-shrink:0;
+    background:#fbfcfd;
+    color:#222;
+    border-bottom:1px solid #bfc7cf;
+    box-shadow:0 1px 0 #fff inset;
+  }
+
+  .hwp-menubar{
+    height:33px;
+    display:flex;
+    align-items:center;
+    gap:2px;
+    padding:0 13px;
+    border-bottom:1px solid #e1e5e8;
+    font-size:12px;
+  }
+
+  .hwp-menubar button{
+    min-height:27px;
+    height:27px;
+    padding:0 11px;
+    border:0;
+    border-radius:2px;
+    background:transparent;
+    color:#242b31;
+    font-size:12px;
+    cursor:default;
+  }
+
+  .hwp-menubar .selected{
+    background:#1683cf;
+    color:#fff;
+  }
+
+  .hwp-ribbon{
+    height:83px;
+    display:flex;
+    align-items:stretch;
+    min-width:1280px;
+    padding:6px 8px 4px;
+    overflow:hidden;
+  }
+
+  .hwp-ribbon-scroll{
+    overflow-x:auto;
+    scrollbar-width:thin;
+  }
+
+  .hwp-group{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0 10px;
+    border-right:1px solid #d7dde2;
+    flex-shrink:0;
+    font-size:11px;
+  }
+
+  .hwp-tool{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-width:40px;
+    height:66px;
+    padding:2px 3px;
+    border:0;
+    background:transparent;
+    color:#34424d;
+    font-size:10px;
+    line-height:1.35;
+    cursor:default;
+  }
+
+  .hwp-tool b{
+    display:block;
+    font:400 23px/1.05 "Segoe UI Symbol","Malgun Gothic",sans-serif;
+    color:#5c7182;
+    margin-bottom:4px;
+  }
+
+  .hwp-tool.active{
+    background:#e6f2fb;
+    box-shadow:inset 0 0 0 1px #94c6e7;
+  }
+
+  .hwp-format-stack{
+    display:grid;
+    grid-template-columns:140px 64px;
+    grid-auto-rows:25px;
+    gap:4px;
+    align-content:center;
+    min-width:220px;
+  }
+
+  .hwp-selectbox{
+    height:25px;
+    padding:0 7px;
+    border:1px solid #b8c0c7;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:11px;
+  }
+
+  .hwp-format-icons{
+    grid-column:1 / -1;
+    height:25px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    color:#394955;
+    font-size:14px;
+    white-space:nowrap;
+  }
+
+  /* ------------------ 한글 작업 공간 ------------------ */
+  body[data-workspace-theme="hwp"] #workspace:not([hidden]){
+    display:grid;
+    grid-template-columns:minmax(0,63fr) minmax(245px,16fr) minmax(300px,21fr);
+    grid-template-rows:minmax(0,1fr);
+    background-color:#d8dde2;
+    background-image:
+      linear-gradient(rgba(245,248,250,.03),rgba(245,248,250,.03)),
+      url("./assets/hwp-document-bg.png");
+    background-repeat:no-repeat;
+    background-position:left top;
+    background-size:cover;
+  }
+
+  /* Excel 표 대신 문서 편집 화면이 배경으로 보이게 함 */
+  body[data-workspace-theme="hwp"] #workspace #xl-sheet{
+    display:none!important;
+  }
+
+  body[data-workspace-theme="hwp"] #workspace #page-home{
+    grid-column:2;
+    grid-row:1;
+    margin:9px 0 9px 9px;
+    border:1px solid #b7c2cc;
+    border-radius:2px;
+    background:rgba(255,255,255,.965);
+    box-shadow:0 2px 8px rgba(28,44,58,.18);
+    backdrop-filter:blur(2px);
+  }
+
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    grid-column:3;
+    grid-row:1;
+    margin:9px 9px 9px 7px;
+    border:1px solid #b7c2cc;
+    border-radius:2px;
+    background:rgba(255,255,255,.97);
+    box-shadow:0 2px 8px rgba(28,44,58,.18);
+    backdrop-filter:blur(2px);
+  }
+
+  body[data-workspace-theme="hwp"] .xl-letters{
+    display:none!important;
+  }
+
+  body[data-workspace-theme="hwp"] .xl-pane-tools{
+    background:#eef6fb;
+    border-bottom-color:#cbd7df;
+    color:#29495f;
+  }
+
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel{
+    border-top-color:#1683cf;
+  }
+
+  body[data-workspace-theme="hwp"] #page-home .calendar-day.today{
+    box-shadow:inset 0 0 0 1px #6baed9;
+  }
+
+  body[data-workspace-theme="hwp"] .message-author,
+  body[data-workspace-theme="hwp"] .message.mine .message-author,
+  body[data-workspace-theme="hwp"] .send-button,
+  body[data-workspace-theme="hwp"] .bottom-nav:after{
+    color:#1683cf;
+  }
+
+  body[data-workspace-theme="hwp"] .send-button{
+    background:#eaf4fb;
+  }
+
+  body[data-workspace-theme="hwp"] .bottom-nav button[aria-current=page],
+  body[data-workspace-theme="hwp"] .xl-pane-foot .active{
+    border-bottom-color:#1683cf;
+    color:#1683cf;
+  }
+
+  body[data-workspace-theme="hwp"] .connection-line{
+    background:#f4f7f9;
+  }
+
+  body[data-workspace-theme="hwp"] #xl-show-sheet{
+    display:none!important;
+  }
+}
+
+@media(max-width:1099px){
+  .workspace-mode-switch{
+    margin-left:auto;
+  }
+
+  .workspace-mode-switch button{
+    padding:0 7px;
+  }
+
+  /* 모바일에서는 기존 기능 배치를 유지하되 색감만 변경 */
+  body[data-workspace-theme="hwp"] .app-header{
+    background:#1683cf;
+  }
+
+  body[data-workspace-theme="hwp"] .workspace-mode-switch button[aria-pressed="true"]{
+    color:#1683cf;
+  }
+}
+
+
+/* 한글 문서 본문 모형 */
+.hwp-document-stage{display:none;}
+
+@media(min-width:1100px){
+  body[data-workspace-theme="hwp"] #workspace:not([hidden]){
+    background:#d7dce1;
+    background-image:none;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-stage{
+    display:flex;
+    grid-column:1;
+    grid-row:1;
+    min-width:0;
+    min-height:0;
+    overflow:auto;
+    position:relative;
+    align-items:flex-start;
+    justify-content:center;
+    padding:38px 34px 56px;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.12),transparent 17%,transparent 83%,rgba(255,255,255,.12)),
+      #d7dce1;
+    scrollbar-width:thin;
+  }
+
+  .hwp-document-stage:before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:24px;
+    border-bottom:1px solid #adb7c0;
+    background:
+      repeating-linear-gradient(90deg,#89949e 0 1px,transparent 1px 18px),
+      #eef1f3;
+    opacity:.9;
+  }
+
+  .hwp-document-page{
+    width:min(760px,calc(100% - 20px));
+    min-height:1040px;
+    box-sizing:border-box;
+    background:#fff;
+    color:#202020;
+    border:1px solid #b8bec4;
+    box-shadow:0 3px 12px rgba(42,51,59,.24);
+    padding:76px 74px 82px;
+    font-family:"Batang","바탕","함초롬바탕","Malgun Gothic",serif;
+    font-size:14px;
+    line-height:1.85;
+    position:relative;
+  }
+
+  .hwp-document-page:before,
+  .hwp-document-page:after{
+    content:"";
+    position:absolute;
+    top:46px;
+    width:24px;
+    height:24px;
+    border-top:1px solid #c5c9cd;
+  }
+  .hwp-document-page:before{left:35px;border-left:1px solid #c5c9cd;}
+  .hwp-document-page:after{right:35px;border-right:1px solid #c5c9cd;}
+
+  .hwp-report-kicker{
+    margin:0 0 9px;
+    color:#6d747a;
+    text-align:right;
+    font-family:"Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:11px;
+    letter-spacing:.02em;
+  }
+
+  .hwp-report-title{
+    margin:0 0 8px;
+    text-align:center;
+    font-size:25px;
+    line-height:1.45;
+    font-weight:700;
+    letter-spacing:-.04em;
+  }
+
+  .hwp-report-subtitle{
+    margin:0 0 42px;
+    text-align:center;
+    color:#555;
+    font-size:13px;
+  }
+
+  .hwp-report-section{
+    margin:25px 0 10px;
+    padding:7px 10px;
+    background:#eef3f8;
+    border-left:4px solid #5e87aa;
+    font-family:"Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:16px;
+    font-weight:700;
+    line-height:1.4;
+  }
+
+  .hwp-report-subhead{
+    margin:17px 0 5px;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  .hwp-report-paragraph{
+    margin:4px 0 9px;
+    text-align:justify;
+    word-break:keep-all;
+  }
+
+  .hwp-report-list{
+    margin:5px 0 14px 20px;
+    padding:0;
+  }
+  .hwp-report-list li{margin:3px 0;padding-left:2px;}
+
+  .hwp-report-table-title{
+    margin:18px 0 5px;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  .hwp-report-table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    margin:0 0 17px;
+    font-family:"Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:11px;
+    line-height:1.45;
+  }
+  .hwp-report-table th,
+  .hwp-report-table td{
+    border:1px solid #737373;
+    padding:6px 7px;
+    text-align:center;
+    vertical-align:middle;
+  }
+  .hwp-report-table th{background:#fff4c9;font-weight:700;}
+  .hwp-report-table td:first-child{text-align:left;}
+
+  .hwp-report-note{
+    margin:8px 0 0;
+    color:#626262;
+    font-size:11px;
+  }
+
+  .hwp-report-cursor{
+    display:inline-block;
+    width:1px;
+    height:1.2em;
+    background:#2189d6;
+    vertical-align:-.2em;
+    margin-left:2px;
+    animation:hwp-caret 1.05s steps(1,end) infinite;
+  }
+  @keyframes hwp-caret{50%{opacity:0;}}
+}
+
+
+.hwp-memo-bar{display:none;}
+
+/* =========================================================
+   한글 모드 v3 기반 레이아웃 (v4에서 최종 오버라이드)
+   ========================================================= */
+@media(min-width:1100px){
+  body[data-workspace-theme="hwp"] #workspace:not([hidden]){
+    display:grid;
+    grid-template-columns:minmax(720px,1fr) 332px;
+    grid-template-rows:minmax(285px,42%) minmax(320px,58%);
+    gap:0;
+    overflow:hidden;
+    background:#d5d9dd;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-stage{
+    grid-column:1;
+    grid-row:1 / 3;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:34px;
+    padding:48px 44px 70px;
+    overflow:auto;
+    background:
+      linear-gradient(90deg,rgba(255,255,255,.11),transparent 12%,transparent 88%,rgba(255,255,255,.11)),
+      #d5d9dd;
+    scrollbar-width:thin;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-stage:before{
+    position:sticky;
+    top:-48px;
+    width:calc(100% + 88px);
+    min-height:22px;
+    flex:0 0 22px;
+    z-index:3;
+    margin:-48px -44px -12px;
+    background:
+      repeating-linear-gradient(90deg,#9aa4ad 0 1px,transparent 1px 18px),
+      #eef1f3;
+    border-bottom:1px solid #adb7c0;
+    opacity:.96;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-page{
+    flex:0 0 auto;
+    width:min(790px,calc(100% - 34px));
+    min-height:1118px;
+    padding:78px 78px 84px;
+    margin:0;
+    box-shadow:0 3px 13px rgba(34,43,50,.24);
+  }
+
+  .hwp-page-number{
+    position:absolute;
+    bottom:28px;
+    left:0;
+    right:0;
+    text-align:center;
+    color:#777;
+    font-family:"Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:10px;
+  }
+
+  .hwp-report-quote{
+    margin:14px 0 16px;
+    padding:10px 13px;
+    border-left:3px solid #93a9bb;
+    background:#f6f8fa;
+    color:#444;
+    font-size:12px;
+  }
+
+  .hwp-report-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+    margin:11px 0 17px;
+  }
+  .hwp-report-grid>div{
+    border:1px solid #b8bec4;
+    background:#fafafa;
+    padding:9px 11px;
+    font-family:"Malgun Gothic","맑은 고딕",sans-serif;
+    font-size:11px;
+    line-height:1.55;
+  }
+  .hwp-report-grid b{display:block;margin-bottom:2px;color:#314b60;}
+
+  /* 우측은 한글의 보조 창처럼 붙여 보이게 함 */
+  body[data-workspace-theme="hwp"] #workspace #page-home,
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    min-width:0;
+    min-height:0;
+    margin:0;
+    border:0;
+    border-left:1px solid #b8c0c7;
+    border-radius:0;
+    box-shadow:none;
+    backdrop-filter:none;
+    background:#f7f8f9;
+  }
+
+  body[data-workspace-theme="hwp"] #workspace #page-home{
+    grid-column:2;
+    grid-row:1;
+    border-bottom:1px solid #b8c0c7;
+  }
+
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    grid-column:2;
+    grid-row:2;
+  }
+
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools{
+    min-height:29px;
+    height:29px;
+    padding:3px 8px;
+    background:#eef2f5;
+    border-bottom:1px solid #c9d0d6;
+    color:#46545e;
+    font-size:10px;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools strong{
+    font-weight:600;
+    color:#3e4d58;
+  }
+
+  body[data-workspace-theme="hwp"] #page-home .xl-pivot-scroll{
+    padding:8px;
+    background:#fafbfc;
+    overflow:auto;
+  }
+  body[data-workspace-theme="hwp"] #page-home .panel{
+    margin:0 0 7px;
+    padding:7px;
+    border:1px solid #d5dade;
+    background:#fff;
+  }
+  body[data-workspace-theme="hwp"] #page-home .panel:after{display:none;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel{border-top:1px solid #d5dade;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-grid{gap:1px;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-day{
+    min-height:24px;
+    height:24px;
+    color:#4e555b;
+    font-size:10px;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-day.today{
+    background:#eaf3f9;
+    box-shadow:inset 0 0 0 1px #8ab8d6;
+    color:#245b7c;
+  }
+  body[data-workspace-theme="hwp"] #page-home .weekdays{font-size:9px;color:#7a8288;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-key{font-size:8px;color:#81888e;}
+  body[data-workspace-theme="hwp"] #page-home .todo-panel{margin-bottom:0;}
+  body[data-workspace-theme="hwp"] #page-home .events-panel,
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-foot,
+  body[data-workspace-theme="hwp"] #page-home .today-heading{
+    display:none!important;
+  }
+
+  /* 메신저를 한글 '메모' 창처럼 보이게 */
+  .hwp-memo-bar{display:none;}
+  body[data-workspace-theme="hwp"] .hwp-memo-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:30px;
+    height:30px;
+    padding:0 8px;
+    background:#eef2f5;
+    border-bottom:1px solid #c9d0d6;
+    color:#45525c;
+    font:600 10px/1 "Malgun Gothic","맑은 고딕",sans-serif;
+    flex-shrink:0;
+  }
+  body[data-workspace-theme="hwp"] .hwp-memo-bar span:last-child{
+    color:#8a939a;
+    font-weight:400;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-top{
+    padding:6px 8px 4px;
+    background:#f8f9fa;
+    border-bottom:1px solid #e0e4e7;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1{
+    font-size:10px;
+    color:#5c666e;
+    font-weight:600;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-list{
+    margin:3px -2px 0;
+    padding:0 2px 3px;
+    gap:3px;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-chip{
+    min-height:23px;
+    padding:2px 6px;
+    border:1px solid #d7dde1;
+    background:#fff;
+    color:#53616a;
+    font-size:9px;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-chip[aria-current="true"]{
+    background:#edf4f8;
+    border-color:#bfcfd9;
+    color:#315e78;
+  }
+  body[data-workspace-theme="hwp"] #page-chat #private-start{font-size:9px;min-height:21px;padding:1px 5px;}
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-context{
+    padding:5px 8px;
+    background:#fff;
+    border-bottom:1px solid #e1e4e7;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-context strong{font-size:10px;color:#414d55;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-context p{font-size:8px;color:#92999f;}
+  body[data-workspace-theme="hwp"] #page-chat #history-open{font-size:9px;}
+  body[data-workspace-theme="hwp"] #page-chat .xl-more{display:none;}
+  body[data-workspace-theme="hwp"] #page-chat .xl-unread{font-size:9px;background:#fff;}
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-scroll{
+    padding:7px;
+    background:#f5f6f7;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-messages{gap:6px;}
+  body[data-workspace-theme="hwp"] #page-chat .message,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    padding:6px 7px;
+    border:1px solid #d8d6c4;
+    border-left:3px solid #d6c568;
+    background:#fffdf0;
+    box-shadow:0 1px 2px rgba(40,45,50,.04);
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    border-color:#cbd9c8;
+    border-left-color:#8fbd82;
+    background:#f4fbf1;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-author,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine .message-author{
+    color:#4e5a61;
+    font-size:9px;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-bubble,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-bubble{
+    color:#333;
+    font-size:10px;
+    line-height:1.45;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-meta,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-meta{
+    font-size:8px;
+    color:#93999d;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .composer-wrap{
+    padding:6px 7px 7px;
+    background:#eef1f3;
+    border-top:1px solid #d5dadd;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea{
+    min-height:30px;
+    height:30px;
+    border:1px solid #cbd2d7;
+    background:#fff;
+    font-size:10px;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .send-button{
+    width:30px;
+    min-width:30px;
+    height:30px;
+    min-height:30px;
+    background:#dde9f0;
+    color:#50738a;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer-note{display:none;}
+
+  /* 하단 앱 네비게이션과 연결 문구를 감춰 한글 전체화면 느낌 유지 */
+  body[data-workspace-theme="hwp"] .bottom-nav,
+  body[data-workspace-theme="hwp"] .connection-line{
+    display:none!important;
+  }
+}
+
+</style>
+
+
+<style id="hwp-v4-fullscreen-style">
+/* =========================================================
+   한글 모드 v4
+   - 작업 공간 전체를 한글 문서 편집 화면처럼 사용
+   - 우측 달력/채팅을 외부 앱 패널이 아니라 문서의 '메모' 영역처럼 통합
+   ========================================================= */
+.hwp-statusbar{display:none;}
+
+@media(min-width:1100px){
+  body[data-workspace-theme="hwp"] #workspace:not([hidden]){
+    display:block!important;
+    position:relative!important;
+    overflow:hidden!important;
+    background:#cfd4d8!important;
+    min-height:0;
+  }
+
+  /* 문서 편집 캔버스가 전체 작업공간을 차지 */
+  body[data-workspace-theme="hwp"] .hwp-document-stage{
+    position:absolute!important;
+    inset:0!important;
+    width:auto!important;
+    height:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:flex-start!important;
+    gap:34px!important;
+    overflow:auto!important;
+    box-sizing:border-box;
+    padding:43px 330px 54px 56px!important;
+    background:
+      linear-gradient(90deg,#bfc6cc 0 21px,transparent 21px),
+      linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 90px),
+      #cfd4d8!important;
+    scrollbar-width:thin;
+    z-index:1;
+  }
+
+  /* 상단 가로 눈금자 */
+  body[data-workspace-theme="hwp"] .hwp-document-stage:before{
+    content:""!important;
+    display:block!important;
+    position:sticky!important;
+    top:-43px!important;
+    left:auto!important;
+    right:auto!important;
+    width:calc(100% + 386px)!important;
+    height:24px!important;
+    min-height:24px!important;
+    flex:0 0 24px!important;
+    margin:-43px -330px -12px -56px!important;
+    z-index:4!important;
+    border-bottom:1px solid #9ea8b0!important;
+    background:
+      repeating-linear-gradient(90deg,#7e8992 0 1px,transparent 1px 20px),
+      linear-gradient(#f8fafb,#e9edf0)!important;
+    opacity:1!important;
+  }
+
+  /* 종이 폭을 넓혀 실제 한글 전체화면 느낌 */
+  body[data-workspace-theme="hwp"] .hwp-document-page{
+    flex:0 0 auto!important;
+    width:min(980px,calc(100% - 20px))!important;
+    min-height:1125px!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:78px 86px 86px!important;
+    border:1px solid #aeb5ba!important;
+    box-shadow:0 2px 8px rgba(23,31,37,.22)!important;
+    background:#fff!important;
+  }
+
+  /* 본문 크기는 실제 보고서처럼 조금 작게 */
+  body[data-workspace-theme="hwp"] .hwp-report-paragraph{
+    font-size:13px;
+    line-height:1.95;
+  }
+  body[data-workspace-theme="hwp"] .hwp-report-list{
+    font-size:12.5px;
+    line-height:1.8;
+  }
+
+  /* 오른쪽 일정: 독립 앱이 아니라 한글 우측 보조창처럼 아주 얇게 */
+  body[data-workspace-theme="hwp"] #workspace #page-home{
+    display:flex!important;
+    position:absolute!important;
+    top:10px!important;
+    right:10px!important;
+    bottom:auto!important;
+    left:auto!important;
+    width:286px!important;
+    height:244px!important;
+    z-index:8!important;
+    margin:0!important;
+    border:1px solid #aeb8bf!important;
+    border-radius:0!important;
+    box-shadow:0 1px 4px rgba(34,43,50,.13)!important;
+    background:rgba(248,250,251,.97)!important;
+    overflow:hidden!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools{
+    min-height:25px!important;
+    height:25px!important;
+    padding:2px 7px!important;
+    background:#edf2f5!important;
+    border-bottom:1px solid #bcc5cb!important;
+    color:#44525c!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools strong{
+    font-size:9px!important;
+    font-weight:700!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools span{
+    font-size:8px!important;
+    color:#758089!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pivot-scroll{
+    flex:1!important;
+    min-height:0!important;
+    padding:5px!important;
+    overflow:hidden!important;
+    background:#fbfcfc!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel{
+    display:block!important;
+    margin:0!important;
+    padding:5px 6px!important;
+    border:0!important;
+    background:#fff!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel .section-heading{
+    min-height:18px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel h2{
+    font-size:10px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel .text-button,
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel .icon-button{
+    min-height:18px!important;
+    height:18px!important;
+    font-size:8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .weekdays{
+    padding:4px 0 1px!important;
+    font-size:8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-day{
+    min-height:20px!important;
+    height:20px!important;
+    padding:0!important;
+    font-size:8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-key{
+    padding-top:2px!important;
+    font-size:7px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .todo-panel,
+  body[data-workspace-theme="hwp"] #page-home .events-panel,
+  body[data-workspace-theme="hwp"] #page-home .today-heading,
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-foot,
+  body[data-workspace-theme="hwp"] #page-home #xl-show-sheet{
+    display:none!important;
+  }
+
+  /* 메신저 = 한글의 '메모' 패널 */
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    display:flex!important;
+    position:absolute!important;
+    top:263px!important;
+    right:10px!important;
+    bottom:25px!important;
+    left:auto!important;
+    width:286px!important;
+    height:auto!important;
+    z-index:8!important;
+    margin:0!important;
+    border:1px solid #aeb8bf!important;
+    border-radius:0!important;
+    box-shadow:0 1px 4px rgba(34,43,50,.13)!important;
+    background:rgba(248,249,250,.98)!important;
+    overflow:hidden!important;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-memo-bar{
+    display:flex!important;
+    min-height:25px!important;
+    height:25px!important;
+    padding:0 7px!important;
+    background:#e8eef2!important;
+    border-bottom:1px solid #b9c3ca!important;
+    color:#3f4e58!important;
+    font-size:9px!important;
+  }
+  body[data-workspace-theme="hwp"] .hwp-memo-bar span:first-child:before{
+    content:"▤ ";
+    color:#4289b8;
+  }
+
+  /* 채팅 상단은 '메신저'라기보다 메모 필터처럼 */
+  body[data-workspace-theme="hwp"] #page-chat .chat-top{
+    padding:4px 6px 3px!important;
+    background:#f6f8f9!important;
+    border-bottom:1px solid #d6dde1!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-top .section-heading{
+    min-height:18px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1{
+    font-size:0!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1:after{
+    content:"검토 메모";
+    font-size:9px;
+    color:#606b72;
+    font-weight:700;
+  }
+  body[data-workspace-theme="hwp"] #page-chat #private-start{
+    min-height:18px!important;
+    height:18px!important;
+    padding:0 4px!important;
+    border:1px solid #ccd4d9!important;
+    background:#fff!important;
+    color:#67737b!important;
+    font-size:8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-list{
+    margin:2px 0 0!important;
+    padding:0!important;
+    gap:2px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-chip{
+    min-height:19px!important;
+    height:19px!important;
+    padding:0 5px!important;
+    border:1px solid #d5dbdf!important;
+    background:#fff!important;
+    color:#69757d!important;
+    font-size:8px!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-context{
+    padding:4px 6px!important;
+    background:#fff!important;
+    border-bottom:1px solid #dde2e5!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-context strong{font-size:9px!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-context p{display:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat #history-open{font-size:8px!important;min-height:18px!important;}
+  body[data-workspace-theme="hwp"] #page-chat .xl-more{display:none!important;}
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-scroll{
+    flex:1!important;
+    min-height:0!important;
+    padding:9px 8px 10px 28px!important;
+    overflow:auto!important;
+    background:
+      linear-gradient(90deg,transparent 0 16px,#d8dee2 16px 17px,transparent 17px),
+      #f4f5f6!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-messages{gap:8px!important;}
+
+  /* 실제 한글 메모처럼 색이 다른 말풍선 + 문서 연결선 */
+  body[data-workspace-theme="hwp"] #page-chat .message,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    position:relative!important;
+    display:block!important;
+    padding:6px 7px!important;
+    border:1px solid #b9c89d!important;
+    border-left:1px solid #b9c89d!important;
+    background:#dcf4b6!important;
+    box-shadow:0 1px 2px rgba(36,44,49,.08)!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message:nth-child(3n+2){
+    background:#f5d4e1!important;
+    border-color:#d7a7b9!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message:nth-child(3n){
+    background:#fff0a9!important;
+    border-color:#d9c768!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    background:#d6f3b2!important;
+    border-color:#9ebf7d!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message:before{
+    content:"";
+    position:absolute;
+    left:-29px;
+    top:16px;
+    width:28px;
+    border-top:1px dotted #b98f8f;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message:after{
+    content:"";
+    position:absolute;
+    left:-32px;
+    top:13px;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#c48181;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-author,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine .message-author{
+    color:#4d5a4d!important;
+    font-size:8px!important;
+    font-weight:700!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-bubble,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-bubble{
+    margin-top:2px!important;
+    color:#303535!important;
+    font-size:9px!important;
+    line-height:1.45!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-meta,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-meta{
+    font-size:7px!important;
+    color:#788078!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .composer-wrap{
+    padding:5px 6px!important;
+    background:#e9edef!important;
+    border-top:1px solid #c8d0d5!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea{
+    min-height:28px!important;
+    height:28px!important;
+    padding:4px 6px!important;
+    border:1px solid #bcc6cc!important;
+    border-radius:0!important;
+    background:#fff!important;
+    font-size:9px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea::placeholder{
+    color:transparent!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea:placeholder-shown{
+    background:#fff!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer:before{
+    content:"메모 내용";
+    align-self:center;
+    color:#59666e;
+    font-size:8px;
+    white-space:nowrap;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .send-button{
+    width:28px!important;
+    min-width:28px!important;
+    height:28px!important;
+    min-height:28px!important;
+    border-radius:0!important;
+    background:#dce9f1!important;
+    color:#376e91!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer-note{display:none!important;}
+
+  /* 한글 하단 상태 표시줄 */
+  body[data-workspace-theme="hwp"] .hwp-statusbar{
+    display:flex!important;
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:24px;
+    z-index:12;
+    align-items:center;
+    justify-content:space-between;
+    box-sizing:border-box;
+    padding:0 9px;
+    border-top:1px solid #aeb7bd;
+    background:linear-gradient(#f5f7f8,#e7ebee);
+    color:#637078;
+    font:9px/1 "Malgun Gothic","맑은 고딕",sans-serif;
+  }
+
+  /* 한글 모드에서는 외부 앱 느낌이 나는 하단 UI를 숨김 */
+  body[data-workspace-theme="hwp"] .bottom-nav,
+  body[data-workspace-theme="hwp"] .connection-line{
+    display:none!important;
+  }
+
+  /* 참여자 화면을 열었을 때는 위 부유 패널을 덮도록 */
+  body[data-workspace-theme="hwp"] #workspace.xl-members-open #page-members{
+    z-index:30!important;
+  }
+}
+</style>
+
+
+<style id="hwp-v5-layout-style">
+/* =========================================================
+   한글 모드 v5
+   - 문서 페이지를 화면의 대부분(약 76~80%)으로 확대
+   - 오른쪽 보조열에 메모 → 달력 → 실제 채팅을 세로로 배치
+   - 채팅은 더 이상 메모처럼 위장하지 않고, 메모 패널과 분리
+   ========================================================= */
+.hwp-review-panel{display:none;}
+
+@media(min-width:1100px){
+  body[data-workspace-theme="hwp"] #workspace:not([hidden]){
+    display:block!important;
+    position:relative!important;
+    overflow:hidden!important;
+    background:#cbd1d6!important;
+  }
+
+  /* 문서 편집 면적을 최대한 넓게 */
+  body[data-workspace-theme="hwp"] .hwp-document-stage{
+    position:absolute!important;
+    inset:0 362px 23px 0!important;
+    width:auto!important;
+    height:auto!important;
+    box-sizing:border-box!important;
+    padding:38px 24px 58px 34px!important;
+    gap:30px!important;
+    overflow:auto!important;
+    align-items:center!important;
+    background:
+      linear-gradient(90deg,#b8c0c6 0 20px,transparent 20px),
+      #cfd4d8!important;
+    z-index:1!important;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-stage:before{
+    top:-38px!important;
+    width:calc(100% + 58px)!important;
+    margin:-38px -24px -10px -34px!important;
+    height:23px!important;
+    min-height:23px!important;
+    flex-basis:23px!important;
+  }
+
+  /* A4 비율은 유지하되, 가용 폭을 거의 다 사용 */
+  body[data-workspace-theme="hwp"] .hwp-document-page{
+    width:min(1080px,calc(100% - 18px))!important;
+    min-height:1180px!important;
+    padding:72px 82px 82px!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    box-shadow:0 2px 9px rgba(31,40,47,.22)!important;
+    border:1px solid #bfc4c8!important;
+    background:#fff!important;
+  }
+
+  /* 우측 공통 폭 */
+  body[data-workspace-theme="hwp"] .hwp-review-panel,
+  body[data-workspace-theme="hwp"] #workspace #page-home,
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    position:absolute!important;
+    right:7px!important;
+    left:auto!important;
+    width:344px!important;
+    box-sizing:border-box!important;
+    border:1px solid #adb7bf!important;
+    background:#f8f9fa!important;
+    box-shadow:0 1px 3px rgba(34,42,48,.11)!important;
+    z-index:8!important;
+  }
+
+  /* 1) 메모/의견 */
+  body[data-workspace-theme="hwp"] .hwp-review-panel{
+    display:flex!important;
+    flex-direction:column!important;
+    top:7px!important;
+    height:170px!important;
+    overflow:hidden!important;
+  }
+  .hwp-review-head{
+    height:25px;
+    min-height:25px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 7px;
+    border-bottom:1px solid #b8c2c9;
+    background:#e8edf1;
+    color:#45515a;
+    font:600 10px/1 "Malgun Gothic","맑은 고딕",sans-serif;
+  }
+  .hwp-review-head strong:before{content:"▤ ";color:#3d89ba;}
+  .hwp-review-head span{font-size:9px;color:#7f888f;font-weight:400;}
+  .hwp-review-list{
+    flex:1;
+    min-height:0;
+    overflow:auto;
+    padding:5px 6px;
+    background:#f2f4f5;
+  }
+  .hwp-review-note{
+    margin:0 0 5px;
+    padding:5px 6px;
+    border:1px solid #aebf82;
+    background:#dcf4b6;
+    color:#33402d;
+    font:9px/1.4 "Malgun Gothic","맑은 고딕",sans-serif;
+  }
+  .hwp-review-note.alt{background:#f4d7e2;border-color:#d4aabd;color:#4a3540;}
+  .hwp-review-meta{display:flex;justify-content:space-between;gap:6px;margin-bottom:2px;}
+  .hwp-review-meta b{font-size:8px;}
+  .hwp-review-meta time{font-size:7px;color:#727b73;}
+  .hwp-review-note p{margin:0;}
+  .hwp-review-form{
+    display:flex;
+    gap:3px;
+    padding:5px;
+    border-top:1px solid #c6cdd2;
+    background:#eef1f3;
+  }
+  .hwp-review-form input{
+    flex:1;min-width:0;height:25px;min-height:25px;padding:3px 5px;
+    border:1px solid #bfc8ce;border-radius:0;background:#fff;font-size:9px;
+  }
+  .hwp-review-form button{
+    width:38px;height:25px;min-height:25px;padding:0;
+    border:1px solid #9fb2bf;border-radius:0;background:#e5edf2;color:#3c647d;font-size:9px;
+  }
+
+  /* 2) 달력: 티가 덜 나도록 아주 컴팩트하게 */
+  body[data-workspace-theme="hwp"] #workspace #page-home{
+    display:flex!important;
+    top:184px!important;
+    height:247px!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    border-left:1px solid #adb7bf!important;
+    border-bottom:1px solid #adb7bf!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-tools{
+    display:flex!important;
+    min-height:25px!important;height:25px!important;padding:0 7px!important;
+    background:#e8edf1!important;border-bottom:1px solid #b8c2c9!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .xl-pivot-scroll{
+    flex:1!important;min-height:0!important;overflow:hidden!important;padding:6px!important;background:#f9fafb!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel{
+    display:block!important;margin:0!important;padding:5px 6px!important;border:0!important;background:#fff!important;
+  }
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel h2{font-size:10px!important;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-panel .section-heading{min-height:18px!important;}
+  body[data-workspace-theme="hwp"] #page-home .weekdays{padding:3px 0 1px!important;font-size:8px!important;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-day{min-height:21px!important;height:21px!important;font-size:8px!important;}
+  body[data-workspace-theme="hwp"] #page-home .calendar-key{padding-top:3px!important;font-size:7px!important;}
+  body[data-workspace-theme="hwp"] #page-home .todo-panel,
+  body[data-workspace-theme="hwp"] #page-home .events-panel,
+  body[data-workspace-theme="hwp"] #page-home .today-heading,
+  body[data-workspace-theme="hwp"] #page-home .xl-pane-foot,
+  body[data-workspace-theme="hwp"] #page-home #xl-show-sheet{display:none!important;}
+
+  /* 3) 실제 채팅: 메모와 분리해서 평범한 업무 대화창으로 */
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    display:flex!important;
+    top:438px!important;
+    bottom:29px!important;
+    height:auto!important;
+    min-height:180px!important;
+    overflow:hidden!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar{
+    display:flex!important;
+    height:25px!important;min-height:25px!important;padding:0 7px!important;
+    background:#e8edf1!important;border-bottom:1px solid #b8c2c9!important;
+    color:#45515a!important;font-size:9px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:first-child{font-size:0;}
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:first-child:before{content:"대화";font-size:9px;color:#45515a;}
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:last-child{font-size:8px;color:#7f888f;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-top{padding:4px 6px 3px!important;background:#f7f8f9!important;border-bottom:1px solid #d7dde1!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1{font-size:9px!important;color:#4d5961!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1:after{content:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat .room-list{margin:2px 0 0!important;padding:0!important;gap:2px!important;}
+  body[data-workspace-theme="hwp"] #page-chat .room-chip{min-height:20px!important;height:20px!important;padding:0 5px!important;font-size:8px!important;background:#fff!important;border:1px solid #d4dade!important;color:#56636c!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-context{padding:4px 6px!important;background:#fff!important;border-bottom:1px solid #dde2e5!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-context strong{font-size:9px!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-context p{display:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat .xl-more{display:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat .chat-scroll{
+    flex:1!important;min-height:0!important;padding:7px!important;overflow:auto!important;background:#f7f7f7!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-messages{gap:6px!important;}
+  body[data-workspace-theme="hwp"] #page-chat .message,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    display:block!important;position:relative!important;padding:5px 6px!important;
+    border:1px solid #d6dade!important;border-left:1px solid #d6dade!important;
+    background:#fff!important;box-shadow:none!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{background:#edf5f9!important;border-color:#c8d9e3!important;}
+  body[data-workspace-theme="hwp"] #page-chat .message:before{display:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat .message-author,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine .message-author{font-size:8px!important;color:#42647a!important;}
+  body[data-workspace-theme="hwp"] #page-chat .message-bubble,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-bubble{font-size:9px!important;line-height:1.4!important;color:#333!important;}
+  body[data-workspace-theme="hwp"] #page-chat .message-meta,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-meta{font-size:7px!important;color:#8d969c!important;}
+  body[data-workspace-theme="hwp"] #page-chat .composer-wrap{padding:5px!important;background:#eef1f3!important;border-top:1px solid #d3d9dd!important;}
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea{height:28px!important;min-height:28px!important;font-size:9px!important;background:#fff!important;}
+  body[data-workspace-theme="hwp"] #page-chat .send-button{height:28px!important;min-height:28px!important;width:29px!important;min-width:29px!important;background:#dbe8ef!important;color:#4a7189!important;}
+  body[data-workspace-theme="hwp"] #page-chat .composer-note{display:none!important;}
+
+  /* 상태 표시줄 */
+  body[data-workspace-theme="hwp"] .hwp-statusbar{z-index:20!important;height:23px!important;min-height:23px!important;}
+}
+
+@media(min-width:1500px){
+  body[data-workspace-theme="hwp"] .hwp-document-stage{right:374px!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-panel,
+  body[data-workspace-theme="hwp"] #workspace #page-home,
+  body[data-workspace-theme="hwp"] #workspace #page-chat{width:356px!important;}
+  body[data-workspace-theme="hwp"] .hwp-document-page{width:min(1120px,calc(100% - 18px))!important;}
+}
+
+</style>
+
+<style id="hwp-v6-layout-style">
+/* =========================================================
+   한글 모드 v6
+   - 문서 작성 화면을 최대한 크게 유지
+   - 메모는 우측 사이드바에서 제거하고 문서 오른쪽 가장자리에 겹쳐 표시
+   - 우측에는 작은 달력 + 실제 대화만 배치
+   - 대화 글꼴/크기를 기존 Excel 모드와 동일한 맑은 고딕 계열로 확대
+   ========================================================= */
+@media(min-width:1100px){
+  /* 우측 보조열은 달력+대화 전용. 메모가 빠진 만큼 대화를 넓고 크게 표시 */
+  body[data-workspace-theme="hwp"] .hwp-document-stage{
+    inset:0 398px 23px 0!important;
+    padding:38px 24px 58px 30px!important;
+    gap:30px!important;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-document-stage:before{
+    width:calc(100% + 54px)!important;
+    margin:-38px -24px -10px -30px!important;
+  }
+
+  /* 페이지가 작업영역을 거의 가득 채우도록 */
+  body[data-workspace-theme="hwp"] .hwp-document-page{
+    width:min(1180px,calc(100% - 18px))!important;
+    min-height:1210px!important;
+    padding:72px 86px 86px!important;
+  }
+
+  /* 메모는 한글 문서 쪽에 떠 있는 실제 검토 메모처럼 보이게 함 */
+  body[data-workspace-theme="hwp"] .hwp-review-panel{
+    display:flex!important;
+    position:absolute!important;
+    top:70px!important;
+    right:410px!important;
+    left:auto!important;
+    width:236px!important;
+    height:188px!important;
+    flex-direction:column!important;
+    overflow:visible!important;
+    border:1px solid #9daf72!important;
+    background:#eff7df!important;
+    box-shadow:0 2px 6px rgba(36,43,48,.16)!important;
+    z-index:14!important;
+  }
+
+  /* 문서 본문과 메모가 연결된 것 같은 선 */
+  body[data-workspace-theme="hwp"] .hwp-review-panel:before{
+    content:"";
+    position:absolute;
+    left:-86px;
+    top:44px;
+    width:86px;
+    border-top:1px dotted #ba6f6f;
+    transform:rotate(-4deg);
+    transform-origin:right center;
+    pointer-events:none;
+  }
+
+  body[data-workspace-theme="hwp"] .hwp-review-head{
+    height:27px!important;
+    min-height:27px!important;
+    padding:0 7px!important;
+    background:#dff1b9!important;
+    border-bottom:1px solid #a9bb7f!important;
+    color:#39452f!important;
+    font:600 10px/1 "Malgun Gothic","맑은 고딕",Arial,sans-serif!important;
+  }
+  body[data-workspace-theme="hwp"] .hwp-review-head strong:before{content:"▤ ";color:#627e3d!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-head span{font-size:9px!important;color:#66725f!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-list{padding:5px!important;background:#f7faef!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-note{
+    padding:5px 6px!important;margin:0 0 5px!important;
+    font:9px/1.45 "Malgun Gothic","맑은 고딕",Arial,sans-serif!important;
+  }
+  body[data-workspace-theme="hwp"] .hwp-review-form{padding:4px!important;background:#eef4df!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-form input{
+    height:26px!important;min-height:26px!important;font:10px "Malgun Gothic","맑은 고딕",Arial,sans-serif!important;
+  }
+  body[data-workspace-theme="hwp"] .hwp-review-form button{
+    height:26px!important;min-height:26px!important;font:10px "Malgun Gothic","맑은 고딕",Arial,sans-serif!important;
+  }
+
+  /* 오른쪽 달력 */
+  body[data-workspace-theme="hwp"] #workspace #page-home,
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    right:7px!important;
+    width:378px!important;
+  }
+
+  body[data-workspace-theme="hwp"] #workspace #page-home{
+    top:7px!important;
+    height:250px!important;
+  }
+
+  /* 대화 영역을 메모가 차지하던 공간만큼 위로 끌어올려 크게 사용 */
+  body[data-workspace-theme="hwp"] #workspace #page-chat{
+    top:264px!important;
+    bottom:29px!important;
+    min-height:310px!important;
+  }
+
+  /* 대화창 전체 글꼴을 기존 Excel UI와 동일하게 */
+  body[data-workspace-theme="hwp"] #page-chat,
+  body[data-workspace-theme="hwp"] #page-chat button,
+  body[data-workspace-theme="hwp"] #page-chat input,
+  body[data-workspace-theme="hwp"] #page-chat textarea{
+    font-family:"Malgun Gothic","맑은 고딕",Arial,sans-serif!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar{
+    height:28px!important;
+    min-height:28px!important;
+    padding:0 9px!important;
+    font-size:11px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:first-child{
+    font-size:11px!important;
+    font-weight:700!important;
+    color:#38464f!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:first-child:before{content:none!important;}
+  body[data-workspace-theme="hwp"] #page-chat .hwp-memo-bar span:last-child{
+    font-size:10px!important;
+    color:#7a858c!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-top{
+    padding:6px 8px 5px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-top h1{
+    font-size:11px!important;
+    color:#3f4b53!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .soft-button{
+    min-height:25px!important;
+    font-size:10px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-list{
+    margin:4px 0 0!important;
+    gap:4px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .room-chip{
+    min-height:26px!important;
+    height:26px!important;
+    padding:2px 8px!important;
+    font-size:11px!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-context{
+    padding:6px 8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-context strong{
+    font-size:11px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-context .text-button{
+    min-height:24px!important;
+    font-size:10px!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .chat-scroll{
+    padding:9px!important;
+    background:#fafafa!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .chat-messages{
+    gap:8px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    padding:7px 8px!important;
+    border:1px solid #dcdcdc!important;
+    background:#fff!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message.mine{
+    background:#eef6ef!important;
+    border-color:#d4e4d7!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-main{
+    gap:4px 6px!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-author,
+  body[data-workspace-theme="hwp"] #page-chat .message.mine .message-author{
+    font-size:11px!important;
+    font-weight:700!important;
+    color:#107c41!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-bubble,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-bubble{
+    font-size:12px!important;
+    line-height:1.55!important;
+    color:#252525!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-meta,
+  body[data-workspace-theme="hwp"] #page-chat .mine .message-meta{
+    font-size:9px!important;
+    color:#8b9398!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .message-delete{
+    font-size:9px!important;
+  }
+
+  body[data-workspace-theme="hwp"] #page-chat .composer-wrap{
+    padding:7px 8px!important;
+    background:#fafafa!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .composer textarea{
+    min-height:36px!important;
+    height:36px!important;
+    padding:7px 8px!important;
+    font-size:12px!important;
+    line-height:1.5!important;
+  }
+  body[data-workspace-theme="hwp"] #page-chat .send-button{
+    min-width:36px!important;
+    width:36px!important;
+    min-height:36px!important;
+    height:36px!important;
+    background:#e9efeb!important;
+    color:#107c41!important;
+  }
+}
+
+@media(min-width:1500px){
+  body[data-workspace-theme="hwp"] .hwp-document-stage{right:414px!important;}
+  body[data-workspace-theme="hwp"] #workspace #page-home,
+  body[data-workspace-theme="hwp"] #workspace #page-chat{width:394px!important;}
+  body[data-workspace-theme="hwp"] .hwp-review-panel{right:426px!important;}
+  body[data-workspace-theme="hwp"] .hwp-document-page{width:min(1240px,calc(100% - 18px))!important;}
+}
+
+/* v7: 읽지 않은 메시지 표시 — 브라우저 탭/대화 탭은 빨간 점으로 표시 */
+.bottom-nav button[data-tab="chat"].has-unread .icon{
+  display:none!important;
+}
+.bottom-nav button[data-tab="chat"].has-unread .unread-dot{
+  display:inline-block!important;
+  width:9px!important;
+  height:9px!important;
+  min-width:9px;
+  border-radius:50%!important;
+  background:#d93025!important;
+  box-shadow:0 0 0 1px rgba(217,48,37,.12);
+  margin:0 5px 0 0!important;
+  vertical-align:middle;
+}
+</style>
+
+
+<style id="notification-sound-style">
+/* v14: 메시지 알림음 ON/OFF + 효과음 선택 + 음량 조절 */
+.notification-sound-control{
+  display:none;
+  position:relative;
+  align-items:center;
+  gap:3px;
+  flex-shrink:0;
+  font-family:"Malgun Gothic","맑은 고딕",Arial,sans-serif;
+}
+.notification-sound-toggle,
+.notification-sound-settings{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:25px;
+  min-height:25px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:4px;
+  background:rgba(255,255,255,.10);
+  color:inherit;
+  line-height:1;
+  cursor:pointer;
+}
+.notification-sound-toggle{
+  width:29px;
+  min-width:29px;
+  font-size:14px;
+}
+.notification-sound-settings{
+  width:22px;
+  min-width:22px;
+  font-size:10px;
+}
+.notification-sound-toggle:hover,
+.notification-sound-settings:hover{background:rgba(255,255,255,.18);}
+.notification-sound-toggle[aria-pressed="false"]{opacity:.62;}
+.notification-sound-toggle .sound-icon{transform:translateY(-.5px);}
+
+.notification-sound-panel{
+  position:absolute;
+  top:31px;
+  right:0;
+  z-index:30000;
+  width:260px;
+  padding:12px;
+  border:1px solid #cfd5da;
+  border-radius:6px;
+  background:#fff;
+  color:#252525;
+  box-shadow:0 8px 24px rgba(0,0,0,.18);
+  font-size:12px;
+  line-height:1.45;
+}
+.notification-sound-panel[hidden]{display:none!important;}
+.notification-sound-panel strong{
+  display:block;
+  margin-bottom:9px;
+  font-size:12px;
+}
+.notification-sound-row{
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+  margin-top:9px;
+}
+.notification-sound-row label{color:#555;white-space:nowrap;}
+.notification-sound-row select{
+  width:100%;
+  height:29px;
+  border:1px solid #bfc5ca;
+  border-radius:3px;
+  background:#fff;
+  color:#222;
+  padding:0 7px;
+  font:12px "Malgun Gothic","맑은 고딕",Arial,sans-serif;
+}
+.notification-volume-wrap{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 44px;
+  align-items:center;
+  gap:7px;
+}
+.notification-volume-wrap input[type="range"]{
+  width:100%;
+  accent-color:#107c41;
+  cursor:pointer;
+}
+.notification-volume-wrap output{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  color:#444;
+  font-size:11px;
+}
+.notification-preview-button{
+  width:100%;
+  min-height:29px;
+  margin-top:11px;
+  border:1px solid #bfc5ca;
+  border-radius:3px;
+  background:#f7f8f8;
+  color:#333;
+  font:12px "Malgun Gothic","맑은 고딕",Arial,sans-serif;
+  cursor:pointer;
+}
+.notification-preview-button:hover{background:#eef1f2;}
+.notification-sound-note{
+  margin:7px 0 0;
+  color:#858585;
+  font-size:10px;
+}
+
+@media(min-width:1100px){
+  .notification-sound-control{display:inline-flex;}
+  body[data-workspace-theme="hwp"] .notification-sound-toggle,
+  body[data-workspace-theme="hwp"] .notification-sound-settings{
+    border-color:#c7d3dc;
+    background:#f8fbfd;
+    color:#536a7a;
+  }
+  body[data-workspace-theme="hwp"] .notification-sound-toggle:hover,
+  body[data-workspace-theme="hwp"] .notification-sound-settings:hover{background:#eef5fa;}
+  body[data-workspace-theme="hwp"] .notification-volume-wrap input[type="range"]{accent-color:#1f7fb6;}
+}
+</style>
+
+</head>
+
+<body>
+<svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+      <rect x="3" y="5" width="18" height="16" rx="3"/>
+      <path d="M7 3v4m10-4v4M3 11h18M8 15h1m6 0h1m-8 3h1"/>
+    </symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24">
+      <path d="M20 15a4 4 0 0 1-4 4H9l-5 3v-7a8 8 0 1 1 16 0Z"/>
+      <path d="M8 11h8m-8 4h5"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <circle cx="9" cy="8" r="3"/>
+      <path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/>
+    </symbol>
+    <symbol id="i-send" viewBox="0 0 24 24">
+      <path d="m3 10 18-7-7 18-3-8-8-3Zm8 3 10-10"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <path d="m5 12 4 4L19 6"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6m4-6v6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="app-frame" id="app-frame">
+
+  <header class="app-header">
+    <a class="brand" href="#" id="brand" aria-label="researchtalk 홈">
+      <span class="brand-mark" aria-hidden="true">X</span>
+      <span>researchtalk</span>
+    </a>
+
+    <div class="xl-quick" aria-hidden="true"
+         title="엑셀 화면 모형 · 표는 읽기 전용 예시">
+      자동 저장 <i class="xl-toggle"></i> 끔　 │　 ▣　 Σ　 ▦　 ▤　 ▾
+    </div>
+
+    <span class="xl-filename">
+      연구사업단_과제관리_월별현황.xlsx ▾
+    </span>
+
+
+    <div class="workspace-mode-switch" id="workspace-mode-switch"
+         role="group" aria-label="작업 배경 선택">
+      <button type="button" data-workspace-theme="excel" aria-pressed="true">Excel</button>
+      <button type="button" data-workspace-theme="hwp" aria-pressed="false">한글</button>
+    </div>
+
+    <div class="notification-sound-control" id="notification-sound-control">
+      <button id="notification-sound-toggle" class="notification-sound-toggle"
+              type="button" aria-pressed="true"
+              aria-label="메시지 알림음 끄기" title="메시지 알림음 켜기/끄기">
+        <span class="sound-icon" aria-hidden="true">🔊</span>
+      </button>
+      <button id="notification-sound-settings" class="notification-sound-settings"
+              type="button" aria-expanded="false"
+              aria-controls="notification-sound-panel"
+              aria-label="알림음 설정" title="알림음 종류와 음량">
+        ▾
+      </button>
+      <div id="notification-sound-panel" class="notification-sound-panel" hidden>
+        <strong>메시지 알림음</strong>
+        <div class="notification-sound-row">
+          <label for="notification-sound-type">효과음</label>
+          <select id="notification-sound-type">
+            <option value="shutter">찰칵</option>
+            <option value="chime">딩</option>
+            <option value="pop">톡</option>
+            <option value="ping">핑</option>
+            <option value="dingdong">딩동</option>
+          </select>
+        </div>
+        <div class="notification-sound-row">
+          <label for="notification-sound-volume">음량</label>
+          <div class="notification-volume-wrap">
+            <input id="notification-sound-volume" type="range"
+                   min="25" max="200" step="5" value="125"
+                   aria-label="알림음 음량" />
+            <output id="notification-sound-volume-value" for="notification-sound-volume">125%</output>
+          </div>
+        </div>
+        <button id="notification-sound-preview" class="notification-preview-button" type="button">
+          ▶ 미리 듣기
+        </button>
+        <p class="notification-sound-note">음량은 25~200%까지 조절할 수 있어요.</p>
+      </div>
+    </div>
+
+    <div class="xl-title-search" aria-hidden="true">
+      <svg class="icon" viewBox="0 0 24 24">
+        <circle cx="10" cy="10" r="6"/>
+        <path d="m15 15 5 5"/>
+      </svg>
+      검색
+    </div>
+
+    <div class="xl-window" aria-hidden="true"><span>♧</span></div>
+    <button class="avatar" id="my-profile" aria-label="내 계정과 참여자">나</button>
+    <div class="xl-window" aria-hidden="true">−　 ▢　 ×</div>
+  </header>
+
+  <div class="xl-chrome"
+       title="엑셀 메뉴 모형입니다. 일정과 대화는 아래에서 사용하세요.">
+    <nav class="xl-menubar" aria-label="엑셀 메뉴 모형">
+      <button disabled>파일</button>
+      <button class="selected" disabled>홈</button>
+      <button disabled>삽입</button>
+      <button disabled>그리기</button>
+      <button disabled>페이지 레이아웃</button>
+      <button disabled>수식</button>
+      <button disabled>데이터</button>
+      <button disabled>검토</button>
+      <button disabled>보기</button>
+      <button disabled>개발 도구</button>
+      <button class="xl-comment" disabled>▱ 메모</button>
+      <button class="xl-share" disabled>♧ 공유 ▾</button>
+    </nav>
+
+    <div class="xl-ribbon-scroll">
+      <div class="xl-ribbon" aria-label="서식 메뉴 모형">
+
+        <div class="xl-group xl-undo">
+          <div class="xl-stack">
+            <button disabled>↶ ▾</button>
+            <button disabled>↷</button>
+          </div>
+          <small>실행 취소</small>
+        </div>
+
+        <div class="xl-group xl-clip">
+          <button class="big" disabled>
+            <b>📋</b>붙여넣기<br>⌄
+          </button>
+          <div class="xl-stack">
+            <button disabled>✂ 잘라내기</button>
+            <button disabled>▤ 복사 ▾</button>
+            <button disabled>◇ 서식 복사</button>
+          </div>
+          <small>클립보드</small>
+        </div>
+
+        <div class="xl-group xl-fonts">
+          <div class="xl-stack">
+            <div class="xl-row">
+              <span class="xl-box" style="width:130px">
+                맑은 고딕 <span>⌄</span>
+              </span>
+              <span class="xl-box">11 ⌄</span>
+              <span>가⌃　가⌄</span>
+            </div>
+            <div class="xl-row xl-font">
+              <span class="bold">가</span>　<i>가</i>　
+              <span class="under">가</span> ▾　
+              <span>▦</span> ▾　
+              <span class="fill">◈</span>　
+              <span class="color">가</span>
+              <span style="font-size:11px;color:#aaa">내천 ▾</span>
+            </div>
+          </div>
+          <small>글꼴</small>
+        </div>
+
+        <div class="xl-group xl-align">
+          <div class="xl-stack">
+            <div class="xl-row">
+              ☰　≡　☰　
+              <span style="color:#5c7fa5">↗</span>
+              ▾　│　↵ 자동 줄 바꿈
+            </div>
+            <div class="xl-row">
+              ☰　≡　☰　 ⇤　⇥　│　↔ 병합하고 가운데 맞춤 ▾
+            </div>
+          </div>
+          <small>맞춤</small>
+        </div>
+
+        <div class="xl-group xl-number">
+          <div class="xl-stack">
+            <span class="xl-box" style="width:130px">
+              일반 <span>⌄</span>
+            </span>
+            <div class="xl-row">▣ ▾　<b>%</b>　,　 .₀₀　.₀</div>
+          </div>
+          <small>표시 형식</small>
+        </div>
+
+        <div class="xl-group xl-styles">
+          <button class="big" disabled><b>▤</b>조건부 서식<br>⌄</button>
+          <button class="big" disabled><b>▦</b>표 서식<br>⌄</button>
+          <button class="big" disabled><b>▦</b>셀 스타일<br>⌄</button>
+          <small>스타일</small>
+        </div>
+
+        <div class="xl-group xl-cells">
+          <div class="xl-stack">
+            <button disabled>▣ 삽입 ▾</button>
+            <button disabled>▧ 삭제 ▾</button>
+            <button disabled>▦ 서식 ▾</button>
+          </div>
+          <small>셀</small>
+        </div>
+
+        <div class="xl-group xl-edit">
+          <div class="xl-stack">
+            <button disabled>Σ 자동 합계 ▾</button>
+            <button disabled>↓ 채우기 ▾</button>
+            <button disabled>◇ 지우기 ▾</button>
+          </div>
+          <button class="big" disabled><b>⚑</b>정렬 및 필터<br>⌄</button>
+          <button class="big" disabled><b>⌕</b>찾기 및 선택<br>⌄</button>
+          <small>편집</small>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="hwp-chrome" id="hwp-chrome"
+       aria-label="한글 2024 문서 편집 화면 모형">
+    <nav class="hwp-menubar" aria-label="한글 메뉴 모형">
+      <button disabled>파일</button>
+      <button class="selected" disabled>편집</button>
+      <button disabled>보기</button>
+      <button disabled>입력</button>
+      <button disabled>서식</button>
+      <button disabled>쪽</button>
+      <button disabled>보안</button>
+      <button disabled>검토</button>
+      <button disabled>도구</button>
+    </nav>
+
+    <div class="hwp-ribbon-scroll">
+      <div class="hwp-ribbon">
+        <div class="hwp-group">
+          <button class="hwp-tool" disabled><b>✂</b>오려두기</button>
+          <button class="hwp-tool" disabled><b>▤</b>복사하기</button>
+          <button class="hwp-tool" disabled><b>📋</b>붙이기</button>
+          <button class="hwp-tool" disabled><b>🖌</b>모양 복사</button>
+        </div>
+        <div class="hwp-group">
+          <button class="hwp-tool" disabled><b>가</b>글자 모양</button>
+          <button class="hwp-tool" disabled><b>≡</b>문단 모양</button>
+          <button class="hwp-tool" disabled><b>A</b>스타일</button>
+        </div>
+        <div class="hwp-group">
+          <button class="hwp-tool active" disabled><b>▯</b>세로</button>
+          <button class="hwp-tool" disabled><b>▭</b>가로</button>
+          <button class="hwp-tool" disabled><b>▦</b>쪽 여백</button>
+          <button class="hwp-tool" disabled><b>▥</b>바탕쪽</button>
+          <button class="hwp-tool" disabled><b>▤</b>단</button>
+        </div>
+        <div class="hwp-group">
+          <button class="hwp-tool" disabled><b>◯</b>도형</button>
+          <button class="hwp-tool" disabled><b>▧</b>그림</button>
+          <button class="hwp-tool" disabled><b>▦</b>표</button>
+          <button class="hwp-tool" disabled><b>▥</b>차트</button>
+        </div>
+        <div class="hwp-group">
+          <div class="hwp-format-stack" aria-hidden="true">
+            <span class="hwp-selectbox">함초롬바탕 <span>⌄</span></span>
+            <span class="hwp-selectbox">13.0 pt <span>⌄</span></span>
+            <div class="hwp-format-icons">가　<b>가</b>　<u>가</u>　가⌄　│　☰　≡　☰</div>
+          </div>
+        </div>
+        <div class="hwp-group">
+          <button class="hwp-tool" disabled><b>⌕</b>찾기</button>
+          <button class="hwp-tool" disabled><b>A↔</b>글자 바꾸기</button>
+          <button class="hwp-tool" disabled><b>↕</b>정렬</button>
+        </div>
+        <div class="hwp-group hwp-memo-tools">
+          <button class="hwp-tool active" disabled><b>▤</b>메모 넣기</button>
+          <button class="hwp-tool" disabled><b>▥</b>메모 보이기</button>
+          <button class="hwp-tool" disabled><b>✓</b>검토 완료</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="xl-formula" aria-label="선택한 셀 내용">
+    <div id="xl-cell">A2</div>
+    <span aria-hidden="true">×　 ✓</span>
+    <em aria-hidden="true">fx</em>
+    <output id="xl-value">연구데이터 통합 기반</output>
+    <span aria-hidden="true">⌄　</span>
+  </div>
+
+  <div class="connection-line">
+    <span id="connection-status" role="status">연결을 준비하고 있어요</span>
+    <span class="xl-status-note">researchtalk · 연구사업 관리　 │　 100%</span>
+    <button id="retry-connection" class="text-button" hidden>다시 연결</button>
+  </div>
+
+  <button id="unread-setup" class="unread-setup" hidden>
+    읽지 않은 대화 표시 설정이 필요해요 · 해결 방법
+  </button>
+
+  <main id="workspace" class="workspace" hidden>
+
+
+    <!-- 한글 모드: 실제 문서처럼 보이는 4쪽 보고서 본문 -->
+    <section class="hwp-document-stage" id="hwp-document-stage" aria-label="한글 보고서 편집 화면 모형">
+
+      <article class="hwp-document-page">
+        <p class="hwp-report-kicker">연구사업단 내부 검토자료 · 2026. 9.</p>
+        <h1 class="hwp-report-title">2026년 연구사업 운영현황 및 주요 추진과제</h1>
+        <p class="hwp-report-subtitle">연구사업단 과제관리 및 성과점검을 위한 내부 보고</p>
+
+        <h2 class="hwp-report-section">Ⅰ. 연구사업 추진 현황</h2>
+        <h3 class="hwp-report-subhead">1. 사업 개요</h3>
+        <p class="hwp-report-paragraph">
+          우리 연구사업단은 연구데이터 구축, 산학협력, 실증지원 및 국제공동연구를 중심으로 세부 과제를 운영하고 있다.
+          2026년에는 과제별 일정과 예산 집행상황을 정기적으로 점검하고, 연구성과의 활용 가능성을 높이기 위한 후속 관리에 중점을 두고 있다.
+          특히 개별 과제의 산출물만 확인하는 방식에서 벗어나 연구기획, 협약, 집행, 성과확산으로 이어지는 전 과정을 하나의 관리 흐름으로 연결하고자 하였다.
+        </p>
+        <ul class="hwp-report-list">
+          <li><b>과제관리</b> : 월별 추진일정과 주요 산출물을 기준으로 진행상황 점검</li>
+          <li><b>예산관리</b> : 집행률이 낮은 과제를 중심으로 집행계획 및 잔여일정 재확인</li>
+          <li><b>성과관리</b> : 논문·협약·실증·데이터 구축 등 과제별 성과를 정기 취합</li>
+          <li><b>협업관리</b> : 외부기관 협의사항과 부서 간 요청사항을 회의기록과 함께 관리</li>
+        </ul>
+
+        <h3 class="hwp-report-subhead">2. 주요 추진 실적</h3>
+        <p class="hwp-report-paragraph">
+          9월 현재 대부분의 과제가 계획된 일정에 따라 진행되고 있으며, 데이터 기반 과제와 산학 공동연구 과제의 집행이 비교적 안정적으로 이루어지고 있다.
+          일부 실증 과제는 외부기관 협의 일정에 따라 추진시기가 조정되고 있어 월말까지 세부 일정을 다시 확인할 예정이다.
+          연구성과의 경우 단순 건수보다는 실제 활용 가능성과 후속 연계 여부를 함께 기록하도록 관리 기준을 보완하였다.
+        </p>
+
+        <div class="hwp-report-table-title">&lt;표 1&gt; 주요 연구과제 추진현황</div>
+        <table class="hwp-report-table" aria-label="주요 연구과제 추진현황">
+          <thead><tr><th style="width:31%">세부 연구과제</th><th style="width:18%">책임부서</th><th style="width:15%">집행률</th><th style="width:18%">주요 성과</th><th style="width:18%">진행상태</th></tr></thead>
+          <tbody>
+            <tr><td>연구데이터 통합 기반</td><td>데이터연구팀</td><td>70.0%</td><td>논문 4편</td><td>수행 중</td></tr>
+            <tr><td>산학 공동연구 플랫폼</td><td>산학협력팀</td><td>70.0%</td><td>협약 8건</td><td>수행 중</td></tr>
+            <tr><td>실증 및 성과 검증</td><td>실증지원팀</td><td>42.0%</td><td>실증 3건</td><td>자료 수집</td></tr>
+            <tr><td>국제 공동연구 네트워크</td><td>국제협력팀</td><td>45.0%</td><td>교류 5회</td><td>협약 진행</td></tr>
+            <tr><td>학술논문 게재 지원</td><td>학술연구팀</td><td>64.0%</td><td>논문 16편</td><td>게재 확인</td></tr>
+          </tbody>
+        </table>
+
+        <p class="hwp-report-note">주: 수치는 2026년 9월 내부 점검자료를 기준으로 정리한 화면 예시임.</p>
+        <div class="hwp-page-number">- 1 -</div>
+      </article>
+
+      <article class="hwp-document-page">
+        <p class="hwp-report-kicker">2026년 연구사업 운영현황 및 주요 추진과제</p>
+        <h2 class="hwp-report-section">Ⅱ. 예산 집행 및 일정관리</h2>
+        <h3 class="hwp-report-subhead">1. 예산 집행상황</h3>
+        <p class="hwp-report-paragraph">
+          예산 집행은 단순 집행률 자체보다 당초 계획한 연구활동이 적정한 시기에 이루어졌는지를 중심으로 점검하였다.
+          상반기에는 협약 체결과 자료구축 준비에 필요한 선행절차가 집중되었고, 하반기에는 연구용역·실증·성과확산 관련 지출이 본격화되는 구조를 보였다.
+          이에 따라 월별 집행률의 일시적 변동보다는 과제 종료 시점까지의 집행 가능성과 잔여 절차를 함께 확인하는 방식으로 관리하였다.
+        </p>
+
+        <div class="hwp-report-grid">
+          <div><b>총 예산</b>과제별 계획예산을 기준으로 월별 집행현황을 통합 관리</div>
+          <div><b>집행 점검</b>60% 미만 과제는 잔여계획과 계약·협약 일정을 추가 확인</div>
+          <div><b>변경 관리</b>일정 변경 시 사유와 후속조치를 함께 기록하여 반복 지연 방지</div>
+          <div><b>성과 연계</b>예산 투입과 주요 산출물의 시점을 비교하여 진행상황 확인</div>
+        </div>
+
+        <h3 class="hwp-report-subhead">2. 일정관리 및 협업체계</h3>
+        <p class="hwp-report-paragraph">
+          과제 일정은 연구진의 개별 일정과 공동 일정을 구분하여 관리하고 있다. 내부 검토회의, 외부 전문가 자문, 협력기관 자료제출과 같이 여러 주체가 참여하는 일정은 공동 일정으로 등록하고,
+          담당자가 직접 수행해야 하는 자료 검토·원고 작성·분석 작업은 개인 할 일로 관리한다. 일정 변경이 발생한 경우에는 단순 날짜 수정에 그치지 않고 관련 대화와 메모를 함께 남겨 후속 확인이 가능하도록 하였다.
+        </p>
+
+        <div class="hwp-report-table-title">&lt;표 2&gt; 4분기 주요 일정(안)</div>
+        <table class="hwp-report-table">
+          <thead><tr><th>구분</th><th>주요 내용</th><th>예정 시기</th><th>담당</th></tr></thead>
+          <tbody>
+            <tr><td>성과 점검</td><td>3분기 연구성과 및 예산 집행현황 취합</td><td>10월 1주</td><td>성과관리팀</td></tr>
+            <tr><td>과제 검토</td><td>차년도 신규·계속과제 검토회의</td><td>10월 3주</td><td>기획전략팀</td></tr>
+            <tr><td>자료 정비</td><td>공개 데이터셋 품질검증 및 메타데이터 보완</td><td>11월</td><td>데이터연구팀</td></tr>
+            <tr><td>연간 보고</td><td>연간 성과보고서 초안 작성 및 부서 확인</td><td>11~12월</td><td>운영사무국</td></tr>
+          </tbody>
+        </table>
+
+        <div class="hwp-report-quote">
+          검토사항: 외부기관 협조가 필요한 일정은 최소 2주 전에 요청하고, 회신 지연 가능성이 있는 자료는 대체자료 확보 여부를 사전에 확인할 필요가 있음.
+        </div>
+
+        <h3 class="hwp-report-subhead">3. 점검 결과</h3>
+        <p class="hwp-report-paragraph">
+          일정 지연은 주로 외부 협의, 자료보완, 계약절차에서 발생하였다. 연구내용 자체의 변경보다 행정·협업 절차에서 발생하는 지연 비중이 높은 만큼,
+          향후에는 주요 마감일 이전에 중간 확인일을 설정하고 담당자 간 요청사항을 메모 형태로 남기는 방식이 효과적일 것으로 판단된다.
+        </p>
+        <div class="hwp-page-number">- 2 -</div>
+      </article>
+
+      <article class="hwp-document-page">
+        <p class="hwp-report-kicker">2026년 연구사업 운영현황 및 주요 추진과제</p>
+        <h2 class="hwp-report-section">Ⅲ. 연구성과 관리 및 활용</h2>
+        <h3 class="hwp-report-subhead">1. 성과관리 방향</h3>
+        <p class="hwp-report-paragraph">
+          연구성과는 논문, 보고서, 특허와 같은 정형 산출물뿐 아니라 데이터셋 구축, 관계기관 협의, 현장 실증, 제도개선 제안 등 과제 수행 과정에서 발생하는 중간성과까지 포함하여 관리할 필요가 있다.
+          특히 정책·공공연구의 경우 최종 산출물의 수만으로 활용도를 판단하기 어려우므로, 결과가 실제 후속 사업이나 의사결정에 어떤 방식으로 연결되었는지를 함께 기록하는 것이 중요하다.
+        </p>
+        <ul class="hwp-report-list">
+          <li>정량성과는 과제별 기준을 통일하여 중복 집계를 방지</li>
+          <li>정성성과는 활용기관, 활용내용, 후속조치의 세 요소를 중심으로 작성</li>
+          <li>대외협력 성과는 협약 체결 이후 실제 공동활동 여부까지 추적</li>
+          <li>데이터 성과는 구축 건수와 함께 갱신주기 및 재사용 가능성을 기록</li>
+        </ul>
+
+        <h3 class="hwp-report-subhead">2. 성과 유형별 관리현황</h3>
+        <div class="hwp-report-table-title">&lt;표 3&gt; 연구성과 유형별 관리기준</div>
+        <table class="hwp-report-table">
+          <thead><tr><th style="width:18%">성과유형</th><th style="width:29%">주요 지표</th><th style="width:31%">확인자료</th><th style="width:22%">점검주기</th></tr></thead>
+          <tbody>
+            <tr><td>학술성과</td><td>논문·학술발표·연구보고서</td><td>게재확인서, 발표자료, 보고서</td><td>분기</td></tr>
+            <tr><td>협력성과</td><td>협약·공동연구·전문가 자문</td><td>협약서, 회의록, 자문결과</td><td>수시</td></tr>
+            <tr><td>실증성과</td><td>실증 횟수·참여기관·검증결과</td><td>실증계획서, 결과자료</td><td>월별</td></tr>
+            <tr><td>데이터성과</td><td>데이터셋·메타데이터·공개 여부</td><td>저장소 링크, 품질검증 결과</td><td>반기</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="hwp-report-subhead">3. 연구성과 활용도 제고</h3>
+        <p class="hwp-report-paragraph">
+          과제 종료 후 성과를 일괄 정리하는 방식은 활용시점을 놓칠 수 있으므로, 연구과정 중 활용 가능성이 확인되는 성과는 즉시 관련 부서와 공유하도록 한다.
+          예를 들어 중간 분석결과가 차년도 사업기획에 활용될 수 있는 경우 최종보고서 발간 이전이라도 내부 검토자료 형태로 제공하고, 추가 검증이 필요한 부분은 명확히 표시하여 활용상의 혼선을 줄인다.
+        </p>
+        <p class="hwp-report-paragraph">
+          또한 유사 과제의 결과를 한 화면에서 비교할 수 있도록 성과 항목의 명칭과 단위를 표준화하고, 반복적으로 활용되는 자료는 별도 데이터셋으로 관리하는 방안을 검토한다.
+          이를 통해 담당자가 변경되더라도 과거의 논의와 성과를 쉽게 확인할 수 있는 업무 연속성을 확보할 수 있다.
+        </p>
+
+        <div class="hwp-report-quote">
+          향후 보완: 성과의 단순 건수뿐 아니라 후속 활용 여부를 표시할 수 있도록 ‘활용 예정–활용 중–활용 완료’의 상태값을 추가하는 방안을 검토한다.
+        </div>
+        <div class="hwp-page-number">- 3 -</div>
+      </article>
+
+      <article class="hwp-document-page">
+        <p class="hwp-report-kicker">2026년 연구사업 운영현황 및 주요 추진과제</p>
+        <h2 class="hwp-report-section">Ⅳ. 향후 추진계획</h2>
+        <h3 class="hwp-report-subhead">1. 관리체계 개선</h3>
+        <p class="hwp-report-paragraph">
+          향후에는 과제관리, 일정관리, 대화기록을 별도의 업무로 분리하지 않고 하나의 작업 흐름 안에서 확인할 수 있도록 관리체계를 정비한다.
+          담당자는 보고서를 작성하면서 필요한 일정과 할 일을 동시에 확인하고, 검토과정에서 발생한 의견은 문서 옆 메모 형태로 남겨 관련자와 즉시 공유할 수 있도록 한다.
+          이러한 방식은 별도의 메신저나 일정 화면을 반복해서 전환하는 시간을 줄이고 문서 중심의 협업 흐름을 유지하는 데 목적이 있다.
+        </p>
+
+        <h3 class="hwp-report-subhead">2. 세부 추진과제</h3>
+        <div class="hwp-report-table-title">&lt;표 4&gt; 향후 개선과제</div>
+        <table class="hwp-report-table">
+          <thead><tr><th style="width:20%">분야</th><th>개선내용</th><th style="width:19%">추진시기</th></tr></thead>
+          <tbody>
+            <tr><td>일정관리</td><td>공동 일정과 개인 할 일을 구분하고 문서 작업화면에서 바로 확인</td><td>10월</td></tr>
+            <tr><td>의견관리</td><td>문서 관련 대화를 메모 패널에 표시하여 검토 이력 유지</td><td>10월</td></tr>
+            <tr><td>성과관리</td><td>성과 유형별 표준 항목을 적용하고 활용상태를 추가 관리</td><td>11월</td></tr>
+            <tr><td>자료관리</td><td>반복 활용 자료의 파일명·저장위치·갱신주기를 표준화</td><td>11~12월</td></tr>
+          </tbody>
+        </table>
+
+        <h3 class="hwp-report-subhead">3. 기대효과</h3>
+        <p class="hwp-report-paragraph">
+          문서를 중심으로 일정과 의견을 함께 확인할 수 있는 업무환경을 구축하면 현재 작성 중인 자료의 맥락을 유지하면서 필요한 협업을 진행할 수 있다.
+          또한 과제별 진행상황과 검토의견이 분산되지 않아 인수인계 시 필요한 정보를 빠르게 파악할 수 있고, 업무 누락이나 중복 요청을 줄이는 데 도움이 될 것으로 예상된다.
+        </p>
+        <p class="hwp-report-paragraph">
+          특히 보고서 작성과 검토가 빈번한 연구조직에서는 문서 자체가 업무의 중심이 되므로, 주변 기능은 최대한 눈에 띄지 않게 배치하되 필요할 때 즉시 사용할 수 있어야 한다.
+          이에 우측 보조영역은 날짜·달력·할 일과 문서 메모를 중심으로 간결하게 구성하고, 메모 영역에서는 기존 대화 기능을 그대로 활용하는 방식으로 운영하는 것이 적절하다.
+        </p>
+
+        <h3 class="hwp-report-subhead">4. 향후 일정</h3>
+        <ul class="hwp-report-list">
+          <li>10월 : 화면 구성 및 사용자 의견 반영</li>
+          <li>11월 : 과제·성과 관리항목 정비 및 시험 운영</li>
+          <li>12월 : 연간 성과보고서 작성과 병행하여 개선사항 점검</li>
+          <li>2027년 1월 : 차년도 업무계획에 개선된 관리방식 반영</li>
+        </ul>
+
+        <p class="hwp-report-note">※ 본 문서는 화면 구현을 위한 예시 보고서이며 실제 업무자료와 무관함.<span class="hwp-report-cursor" aria-hidden="true"></span></p>
+        <div class="hwp-page-number">- 4 -</div>
+      </article>
+    </section>
+
+
+    <!-- 한글 모드 전용: 실제 한글의 메모/검토 창처럼 보이는 독립 패널 -->
+    <aside class="hwp-review-panel" id="hwp-review-panel" aria-label="문서 메모">
+      <div class="hwp-review-head">
+        <strong>메모</strong>
+        <span>검토 의견</span>
+      </div>
+      <div class="hwp-review-list" id="hwp-review-list">
+        <article class="hwp-review-note">
+          <div class="hwp-review-meta"><b>[메모:1] 연구지원팀</b><time>14:12</time></div>
+          <p>표 1의 집행률 수치는 9월 말 기준으로 한 번 더 확인 부탁드립니다.</p>
+        </article>
+        <article class="hwp-review-note alt">
+          <div class="hwp-review-meta"><b>[메모:2] 성과관리팀</b><time>14:21</time></div>
+          <p>성과관리 부분에 활용계획과 후속 연계 내용을 한 문단 정도 추가하면 좋겠습니다.</p>
+        </article>
+      </div>
+      <form class="hwp-review-form" id="hwp-review-form">
+        <label class="sr-only" for="hwp-review-input">메모 입력</label>
+        <input id="hwp-review-input" maxlength="180" placeholder="메모 입력" autocomplete="off" />
+        <button type="submit">입력</button>
+      </form>
+    </aside>
+
+    <!-- A–G: 연구사업 표 -->
+    <section id="xl-sheet" aria-label="연구사업 관리표 · 읽기 전용 예시">
+      <button id="xl-close-sheet" class="xl-mobile-close" type="button">
+        표 닫기 ×
+      </button>
+
+      <div class="xl-table-scroll">
+        <table class="xl-table" aria-label="연구사업단 과제별 예산 예시">
+          <colgroup>
+            <col style="width:34px">
+            <col style="width:calc(25% - 8.5px)">
+            <col style="width:calc(14% - 4.76px)">
+            <col style="width:calc(13% - 4.42px)">
+            <col style="width:calc(13% - 4.42px)">
+            <col style="width:calc(12% - 4.08px)">
+            <col style="width:calc(12% - 4.08px)">
+            <col style="width:calc(11% - 3.74px)">
+          </colgroup>
+          <thead>
+            <tr>
+              <th aria-label="행 번호"></th>
+              <th>A</th><th>B</th><th>C</th><th>D</th>
+              <th>E</th><th>F</th><th>G</th>
+            </tr>
+          </thead>
+          <tbody id="xl-body"></tbody>
+        </table>
+      </div>
+
+      <div class="xl-ticker">
+        <span id="xl-total"></span>
+      </div>
+
+      <div class="xl-sheet-tools">
+        <input id="xl-search" type="search"
+               aria-label="예시 과제·부서 검색"
+               placeholder="과제·부서 검색">
+        <button class="active" type="button" disabled>과제·예산</button>
+        <button type="button" disabled>연구성과</button>
+        <button type="button" disabled>연구인력</button>
+        <small>읽기 전용 예시</small>
+      </div>
+    </section>
+
+    <!-- H–I: 달력, 할 일, 일정 -->
+    <section id="page-home" class="page home-page" aria-label="오늘의 일정">
+      <div class="xl-letters" aria-hidden="true">
+        <span>H</span><span>I</span>
+      </div>
+
+      <div class="xl-pane-tools">
+        <strong>연구 일정</strong>
+        <span id="xl-current-date"></span>
+      </div>
+
+      <div class="xl-pivot-scroll">
+        <button id="xl-show-sheet" class="xl-mobile-open" type="button">
+          연구사업 표 보기
+        </button>
+
+        <div class="today-heading">
+          <div>
+            <p class="eyebrow" id="today-date"></p>
+            <h1 id="today-weekday"></h1>
+          </div>
+          <div class="date-stamp">
+            <span id="today-month"></span>
+            <strong id="today-number"></strong>
+          </div>
+        </div>
+
+        <section class="panel calendar-panel" aria-label="월별 달력">
+          <div class="section-heading">
+            <h2 id="calendar-month"></h2>
+            <div class="inline-actions">
+              <button id="calendar-today" class="text-button">오늘</button>
+              <button id="month-prev" class="icon-button" aria-label="이전 달">‹</button>
+              <button id="month-next" class="icon-button" aria-label="다음 달">›</button>
+            </div>
+          </div>
+
+          <div class="weekdays" aria-hidden="true">
+            <span>일</span><span>월</span><span>화</span><span>수</span>
+            <span>목</span><span>금</span><span>토</span>
+          </div>
+
+          <div id="calendar-grid" class="calendar-grid"></div>
+
+          <div class="calendar-key">
+            <span class="calendar-legend">
+              <i class="my-dot" aria-hidden="true"></i>내 일정
+            </span>
+            <span class="calendar-legend">
+              <i class="shared-dot" aria-hidden="true"></i>함께하는 약속
+            </span>
+          </div>
+        </section>
+
+        <section class="panel todo-panel" aria-labelledby="todo-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">나의 하루</p>
+              <h2 id="todo-heading">오늘의 할 일</h2>
+            </div>
+            <span class="count-badge" id="todo-count">0 / 0</span>
+          </div>
+
+          <ul class="todo-list" id="todo-list"></ul>
+
+          <form id="todo-form" class="inline-form">
+            <label class="sr-only" for="todo-text">새 할 일</label>
+            <input id="todo-text" maxlength="300" required
+                   placeholder="할 일을 적어보세요" autocomplete="off" />
+            <button class="square-button" aria-label="할 일 추가">+</button>
+          </form>
+        </section>
+
+        <section class="panel events-panel" aria-labelledby="events-heading">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">모두의 일정</p>
+              <h2 id="events-heading">이번 달의 약속</h2>
+            </div>
+            <button id="event-add" class="soft-button">+ 약속</button>
+          </div>
+
+          <div id="selected-events" class="selected-events" hidden></div>
+          <ul id="event-list" class="event-list"></ul>
+        </section>
+      </div>
+
+      <div class="xl-pane-foot">
+        <button class="active" data-panel="calendar-panel" type="button">달력</button>
+        <button data-panel="todo-panel" type="button">할 일</button>
+        <button data-panel="events-panel" type="button">약속</button>
+      </div>
+    </section>
+
+    <!-- J: 메신저 -->
+    <section id="page-chat" class="page chat-page" aria-label="대화" hidden>
+      <div class="hwp-memo-bar" aria-hidden="true"><span>대화</span><span>연구사업단</span></div>
+      <div class="xl-letters" aria-hidden="true"><span>J</span></div>
+
+      <div class="chat-top">
+        <div class="section-heading">
+          <h1>연구사업단 대화</h1>
+          <button id="private-start" class="soft-button">+ 개인 대화</button>
+        </div>
+        <div id="room-list" class="room-list" aria-label="대화방"></div>
+      </div>
+
+      <div class="chat-context">
+        <div>
+          <strong id="room-name">우리 모두</strong>
+          <p id="room-subtitle" class="muted"></p>
+        </div>
+        <button id="history-open" class="text-button">날짜별 보기</button>
+      </div>
+
+      <details class="xl-more">
+        <summary>날짜 · 보관 · 파일 · 요약</summary>
+        <div class="chat-tools">
+          <label class="sr-only" for="chat-date">대화 날짜</label>
+          <input type="date" id="chat-date" min="1900-01-01" max="2200-12-31" />
+          <button id="chat-today" class="text-button">오늘</button>
+          <button id="day-archive" class="text-button">하루 보관</button>
+          <button id="day-export" class="text-button">파일 저장</button>
+        </div>
+        <p id="archive-state" class="archive-state"></p>
+        <button id="summary-open" class="text-button summary-open">
+          하루 대화 요약
+        </button>
+      </details>
+
+      <button id="xl-first-unread" class="xl-unread" type="button" hidden>
+        ● 읽지 않은 대화부터 보기
+      </button>
+
+      <div id="chat-scroll" class="chat-scroll" aria-label="대화 내용">
+        <div id="chat-messages" class="chat-messages"></div>
+        <aside id="summary-card" class="summary-card" hidden>
+          <h3>이날의 이야기</h3>
+          <p id="summary-text"></p>
+        </aside>
+      </div>
+
+      <button id="new-message-hint" class="new-message-hint" hidden>
+        새 대화 보기 ↓
+      </button>
+
+      <div class="composer-wrap">
+        <form id="message-form" class="composer">
+          <label class="sr-only" for="message-text">대화 입력</label>
+          <textarea id="message-text" rows="1" maxlength="1000"
+                    placeholder="이야기를 남겨주세요" required></textarea>
+          <button id="message-send" class="send-button" aria-label="대화 보내기">
+            <svg class="icon"><use href="#i-send"/></svg>
+          </button>
+        </form>
+        <p id="message-error" class="field-error" role="alert"></p>
+        <p id="composer-note" class="composer-note">
+          보내는 대화는 자동으로 저장돼요
+        </p>
+      </div>
+    </section>
+
+    <div class="hwp-statusbar" aria-hidden="true">
+      <span>4 / 4쪽　 1단　 32줄　 78칸　 문단 나눔　 8,462글자　 한글　 ✓ 맞춤법 검사</span>
+      <span>쪽 보기　│　130%　−　●　＋</span>
+    </div>
+
+    <!-- 참여자 관리 -->
+    <section id="page-members" class="page members-page" aria-label="참여자" hidden>
+      <div class="section-heading page-heading">
+        <div>
+          <p class="eyebrow">함께하는 사람들</p>
+          <h1>참여자 <span id="member-count" class="muted">0 / 6</span></h1>
+        </div>
+      </div>
+
+      <div class="panel invite-panel">
+        <h2>한 사람씩 초대해요</h2>
+        <p id="invite-description" class="muted">새 초대는 한 명만 사용할 수 있어요.</p>
+        <button id="invite-create" class="primary-button">초대 링크 만들기</button>
+        <div id="invite-list" class="invite-list"></div>
+      </div>
+
+      <div id="dm-requests" class="dm-requests"></div>
+      <ul id="member-list" class="member-list panel"></ul>
+
+      <div class="account-actions">
+        <button id="rename-open" class="soft-button">내 이름 바꾸기</button>
+        <button id="install-help" class="soft-button">홈 화면에 추가</button>
+        <button id="sign-out" class="text-button">로그아웃</button>
+      </div>
+    </section>
+  </main>
+
+  <nav id="bottom-nav" class="bottom-nav" aria-label="주요 메뉴" hidden>
+    <button data-tab="home" aria-current="page">
+      <svg class="icon"><use href="#i-calendar"/></svg>
+      <span>홈</span>
+    </button>
+    <button data-tab="chat">
+      <svg class="icon"><use href="#i-chat"/></svg>
+      <span>대화</span>
+      <span class="unread-dot" aria-hidden="true" hidden></span>
+    </button>
+    <button data-tab="members">
+      <svg class="icon"><use href="#i-users"/></svg>
+      <span>참여자</span>
+      <span id="request-badge" class="request-badge" hidden></span>
+    </button>
+  </nav>
+</div>
+
+<!-- 기존 로그인 -->
+<section id="auth-screen" class="auth-screen" aria-label="로그인">
+  <div class="auth-brand">
+    <span class="brand-mark">r.</span>
+    <strong>researchtalk</strong>
+  </div>
+
+  <div class="auth-card">
+    <p class="eyebrow">함께 생각하고 기록하는 연구 공간</p>
+    <h1 id="auth-title">반가워요.<br />오늘도 함께해요.</h1>
+    <p class="muted" id="auth-description">내 계정으로 로그인해 주세요.</p>
+
+    <div class="segmented" id="auth-modes">
+      <button type="button" data-mode="login" aria-pressed="true">로그인</button>
+      <button type="button" data-mode="signup" aria-pressed="false">초대받아 가입</button>
+    </div>
+
+    <form id="auth-form" class="stack-form">
+      <div id="email-fields">
+        <label for="auth-email">이메일</label>
+        <input id="auth-email" type="email" autocomplete="email"
+               required placeholder="이메일 주소" />
+        <label for="auth-password">비밀번호</label>
+        <input id="auth-password" type="password" autocomplete="current-password"
+               required placeholder="앱 비밀번호" />
+      </div>
+
+      <div id="join-fields" hidden>
+        <label for="auth-name">대화방에서 쓸 이름</label>
+        <input id="auth-name" maxlength="20" autocomplete="nickname" placeholder="이름" />
+        <label for="auth-invite">초대 코드</label>
+        <input id="auth-invite" autocomplete="off" placeholder="초대 링크의 코드" />
+      </div>
+
+      <p class="field-error" id="auth-error" role="alert"></p>
+      <p class="form-info" id="auth-info" role="status"></p>
+      <button id="auth-submit" class="primary-button">로그인</button>
+    </form>
+
+    <button id="auth-retry" class="primary-button" hidden>다시 연결</button>
+    <button id="auth-switch-account" class="text-button" hidden>
+      다른 계정으로 로그인
+    </button>
+    <p class="auth-note">처음 초대받았다면 ‘초대받아 가입’을 눌러주세요.</p>
+  </div>
+</section>
+
+<div id="modal" class="modal-backdrop" hidden>
+  <section class="modal-card" role="dialog"
+           aria-modal="true" aria-labelledby="modal-title">
+    <div class="section-heading">
+      <h2 id="modal-title"></h2>
+      <button id="modal-close" class="icon-button" aria-label="닫기">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </section>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+<noscript>researchtalk를 사용하려면 브라우저의 자바스크립트를 켜주세요.</noscript>
+
+<script id="xl-compact-script">
+(function(){
+  'use strict';
+
+  function start(){
+    const S=window.RTStore;
+    const $=id=>document.getElementById(id);
+    if(!S)return;
+
+    const wide=matchMedia('(min-width:1100px)');
+    const workspace=$('workspace');
+    const chat=$('page-chat');
+    const sheet=$('xl-sheet');
+    const scroller=$('chat-scroll');
+
+
+    /*
+      브라우저 탭 파비콘
+      - Excel 화면: 기존 Excel 계열 favicon
+      - 한글 화면: 파란색 '한' favicon
+      - 읽지 않은 메시지: 화면 종류와 관계없이 빨간 점이 우선 표시
+    */
+    const browserIcon=document.querySelector('link[rel~="icon"]');
+    const excelBrowserIcon=browserIcon?.getAttribute('href')||'./icons/favicon-32.jpg?v=20260929';
+    const hwpBrowserIcon='./icons/favicon-32-hangul.png?v=20260929';
+    const unreadBrowserIcon='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%229%22 fill=%22%23d93025%22/%3E%3C/svg%3E';
+    let faviconHasUnread=false;
+
+    function refreshBrowserFavicon(){
+      if(!browserIcon)return;
+      const theme=document.body?.dataset.workspaceTheme||'excel';
+      const normalIcon=theme==='hwp'?hwpBrowserIcon:excelBrowserIcon;
+      browserIcon.setAttribute('href',faviconHasUnread?unreadBrowserIcon:normalIcon);
+      browserIcon.setAttribute(
+        'type',
+        faviconHasUnread ? 'image/svg+xml' : (theme==='hwp' ? 'image/png' : 'image/jpeg')
+      );
+    }
+
+    /* 테마 전환 스크립트에서도 현재 읽음 상태를 유지한 채 아이콘만 갱신할 수 있게 공개 */
+    window.RTRefreshBrowserFavicon=refreshBrowserFavicon;
+
+    function updateUnreadIndicators(hasUnread){
+      faviconHasUnread=!!hasUnread;
+      refreshBrowserFavicon();
+
+      const chatTab=document.querySelector('.bottom-nav [data-tab="chat"]');
+      const dot=chatTab?.querySelector('.unread-dot');
+
+      if(chatTab){
+        chatTab.classList.toggle('has-unread',hasUnread);
+      }
+      if(dot){
+        dot.hidden=!hasUnread;
+      }
+    }
+
+    /* -------------------------------------------------------
+       v14 메시지 알림음
+       - 🔊/🔇 버튼: 알림음 ON/OFF
+       - ▾ 버튼: 찰칵/딩/톡/핑/딩동 선택 + 25~200% 음량 조절
+       - 설정은 localStorage에 저장되어 새로고침 후에도 유지
+       - 별도 음원 파일 없이 Web Audio API로 합성
+       - 사용자가 페이지를 한 번 클릭/키입력한 뒤부터 자동 재생 가능
+    ------------------------------------------------------- */
+    const SOUND_KEY='researchtalk.notificationSound';
+    const SOUND_TYPE_KEY='researchtalk.notificationSoundType';
+    const SOUND_VOLUME_KEY='researchtalk.notificationSoundVolume';
+
+    const soundControl=$('notification-sound-control');
+    const soundToggle=$('notification-sound-toggle');
+    const soundSettings=$('notification-sound-settings');
+    const soundPanel=$('notification-sound-panel');
+    const soundTypeSelect=$('notification-sound-type');
+    const soundVolumeInput=$('notification-sound-volume');
+    const soundVolumeValue=$('notification-sound-volume-value');
+    const soundPreview=$('notification-sound-preview');
+
+    const VALID_SOUND_TYPES=new Set(['shutter','chime','pop','ping','dingdong']);
+    let soundEnabled=true;
+    let soundType='shutter';
+    let soundVolume=125;
+    let audioContext=null;
+    let audioMaster=null;
+    let audioCompressor=null;
+    let soundStateReady=false;
+    let previousUnreadRooms=new Map();
+    let previousLatestMessageId='';
+
+    try{
+      soundEnabled=localStorage.getItem(SOUND_KEY)!=='off';
+      const savedType=localStorage.getItem(SOUND_TYPE_KEY);
+      if(VALID_SOUND_TYPES.has(savedType))soundType=savedType;
+      const savedVolume=Number(localStorage.getItem(SOUND_VOLUME_KEY));
+      if(Number.isFinite(savedVolume)&&savedVolume>=25&&savedVolume<=200){
+        soundVolume=Math.round(savedVolume/5)*5;
+      }
+    }catch(_){
+      soundEnabled=true;
+      soundType='shutter';
+      soundVolume=125;
+    }
+
+    function paintSoundControls(){
+      if(soundToggle){
+        soundToggle.setAttribute('aria-pressed',String(soundEnabled));
+        soundToggle.setAttribute(
+          'aria-label',
+          soundEnabled?'메시지 알림음 끄기':'메시지 알림음 켜기'
+        );
+        const icon=soundToggle.querySelector('.sound-icon');
+        if(icon)icon.textContent=soundEnabled?'🔊':'🔇';
+      }
+      if(soundTypeSelect)soundTypeSelect.value=soundType;
+      if(soundVolumeInput)soundVolumeInput.value=String(soundVolume);
+      if(soundVolumeValue)soundVolumeValue.textContent=soundVolume+'%';
+      updateMasterVolume();
+    }
+
+    function ensureAudioContext(){
+      if(!soundEnabled)return null;
+      const AudioCtx=window.AudioContext||window.webkitAudioContext;
+      if(!AudioCtx)return null;
+      try{
+        if(!audioContext){
+          audioContext=new AudioCtx();
+          audioMaster=audioContext.createGain();
+          audioCompressor=audioContext.createDynamicsCompressor();
+          /* 100%를 넘겨도 너무 거칠게 깨지지 않도록 피크를 부드럽게 제어 */
+          audioCompressor.threshold.value=-5;
+          audioCompressor.knee.value=12;
+          audioCompressor.ratio.value=5;
+          audioCompressor.attack.value=.002;
+          audioCompressor.release.value=.12;
+          audioMaster.connect(audioCompressor).connect(audioContext.destination);
+          updateMasterVolume();
+        }
+        if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+        return audioContext;
+      }catch(_){
+        return null;
+      }
+    }
+
+    function updateMasterVolume(){
+      if(!audioMaster||!audioContext)return;
+      /* GainNode는 1.0을 넘길 수 있음. 200%는 2.0배 게인. */
+      const level=Math.max(.25,Math.min(2,soundVolume/100));
+      try{
+        audioMaster.gain.cancelScheduledValues(audioContext.currentTime);
+        audioMaster.gain.setTargetAtTime(level,audioContext.currentTime,.01);
+      }catch(_){
+        audioMaster.gain.value=level;
+      }
+    }
+
+    function audioOutput(ctx){
+      ensureAudioContext();
+      return audioMaster||ctx.destination;
+    }
+
+    function shutterBurst(ctx,when,duration,volume,highpass){
+      const rate=ctx.sampleRate;
+      const length=Math.max(1,Math.floor(rate*duration));
+      const buffer=ctx.createBuffer(1,length,rate);
+      const data=buffer.getChannelData(0);
+      for(let i=0;i<length;i++){
+        const envelope=Math.pow(1-i/length,2.8);
+        data[i]=(Math.random()*2-1)*envelope;
+      }
+      const source=ctx.createBufferSource();
+      const filter=ctx.createBiquadFilter();
+      const gain=ctx.createGain();
+      filter.type='highpass';
+      filter.frequency.value=highpass;
+      gain.gain.setValueAtTime(volume,when);
+      gain.gain.exponentialRampToValueAtTime(0.0001,when+duration);
+      source.buffer=buffer;
+      source.connect(filter).connect(gain).connect(audioOutput(ctx));
+      source.start(when);
+      source.stop(when+duration+.01);
+    }
+
+    function tone(ctx,when,freq,duration,volume,type='sine',endFreq=null){
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type=type;
+      osc.frequency.setValueAtTime(freq,when);
+      if(endFreq&&endFreq>0){
+        osc.frequency.exponentialRampToValueAtTime(endFreq,when+duration);
+      }
+      gain.gain.setValueAtTime(Math.max(.0001,volume),when);
+      gain.gain.exponentialRampToValueAtTime(.0001,when+duration);
+      osc.connect(gain).connect(audioOutput(ctx));
+      osc.start(when);
+      osc.stop(when+duration+.01);
+    }
+
+    function playSelectedSound(){
+      if(!soundEnabled)return;
+      const ctx=ensureAudioContext();
+      if(!ctx||ctx.state!=='running')return;
+      const now=ctx.currentTime+.008;
+
+      switch(soundType){
+        case 'chime':
+          /* 밝고 짧은 '딩' */
+          tone(ctx,now,880,.24,.46,'sine',690);
+          tone(ctx,now+.012,1760,.12,.10,'sine',1380);
+          break;
+        case 'pop':
+          /* 짧고 가벼운 '톡' */
+          tone(ctx,now,1050,.085,.55,'triangle',430);
+          break;
+        case 'ping':
+          /* 또렷한 '핑' */
+          tone(ctx,now,1320,.18,.38,'sine',1100);
+          tone(ctx,now+.008,2640,.08,.08,'sine',2200);
+          break;
+        case 'dingdong':
+          /* 두 음으로 들리는 '딩동' */
+          tone(ctx,now,880,.19,.36,'sine',820);
+          tone(ctx,now+.13,660,.25,.32,'sine',610);
+          break;
+        case 'shutter':
+        default:
+          /* 사용자가 지정한 현재 찰칵 기준 음량. 슬라이더가 여기에 25~200%를 곱함. */
+          shutterBurst(ctx,now,.032,.950,1500);
+          shutterBurst(ctx,now+.045,.022,.750,2100);
+          break;
+      }
+    }
+
+    function unreadRoomMap(unreadList){
+      const map=new Map();
+      for(const item of Array.isArray(unreadList)?unreadList:[]){
+        if(!item||typeof item!=='object')continue;
+        const room=String(item.roomId??item.room_id??item.room??'');
+        if(!room)continue;
+        const marker=String(
+          item.messageId??item.message_id??item.id??
+          item.createdAt??item.created_at??item.sentAt??item.sent_at??''
+        );
+        map.set(room,marker);
+      }
+      return map;
+    }
+
+    function hasNewUnreadOutsideCurrent(state,currentLatestId){
+      const next=unreadRoomMap(state?.unread);
+      let fresh=false;
+      for(const [room,marker] of next){
+        if(!previousUnreadRooms.has(room)){
+          fresh=true;
+          break;
+        }
+        const oldMarker=previousUnreadRooms.get(room);
+        if(marker&&oldMarker&&marker!==oldMarker&&currentLatestId===previousLatestMessageId){
+          fresh=true;
+          break;
+        }
+      }
+      previousUnreadRooms=next;
+      return fresh;
+    }
+
+    function maybePlayIncomingSound(state,latestMessage){
+      const latestId=latestMessage?.id||'';
+      const currentRoomIncoming=!!(
+        soundStateReady&&
+        latestId&&
+        latestId!==previousLatestMessageId&&
+        latestMessage?.unread
+      );
+      const otherRoomIncoming=soundStateReady
+        ?hasNewUnreadOutsideCurrent(state,latestId)
+        :(previousUnreadRooms=unreadRoomMap(state?.unread),false);
+
+      if(soundStateReady&&(currentRoomIncoming||otherRoomIncoming)){
+        playSelectedSound();
+      }
+
+      previousLatestMessageId=latestId;
+      soundStateReady=true;
+    }
+
+    paintSoundControls();
+
+    /* 오디오 재생 권한을 사용자의 첫 상호작용에서 미리 활성화 */
+    const armAudio=()=>{
+      if(soundEnabled)ensureAudioContext();
+    };
+    document.addEventListener('pointerdown',armAudio,{capture:true,once:true});
+    document.addEventListener('keydown',armAudio,{capture:true,once:true});
+
+    soundToggle?.addEventListener('click',()=>{
+      soundEnabled=!soundEnabled;
+      try{localStorage.setItem(SOUND_KEY,soundEnabled?'on':'off')}catch(_){}
+      paintSoundControls();
+      if(soundEnabled){
+        ensureAudioContext();
+        setTimeout(playSelectedSound,30);
+      }
+    });
+
+    soundSettings?.addEventListener('click',e=>{
+      e.stopPropagation();
+      const open=!!soundPanel?.hidden;
+      if(soundPanel)soundPanel.hidden=!open;
+      soundSettings.setAttribute('aria-expanded',String(open));
+    });
+
+    soundPanel?.addEventListener('click',e=>e.stopPropagation());
+
+    soundTypeSelect?.addEventListener('change',()=>{
+      const next=soundTypeSelect.value;
+      if(!VALID_SOUND_TYPES.has(next))return;
+      soundType=next;
+      try{localStorage.setItem(SOUND_TYPE_KEY,soundType)}catch(_){}
+      if(soundEnabled){
+        ensureAudioContext();
+        setTimeout(playSelectedSound,20);
+      }
+    });
+
+    soundVolumeInput?.addEventListener('input',()=>{
+      const next=Math.max(25,Math.min(200,Number(soundVolumeInput.value)||100));
+      soundVolume=next;
+      if(soundVolumeValue)soundVolumeValue.textContent=next+'%';
+      updateMasterVolume();
+    });
+
+    soundVolumeInput?.addEventListener('change',()=>{
+      try{localStorage.setItem(SOUND_VOLUME_KEY,String(soundVolume))}catch(_){}
+      if(soundEnabled){
+        ensureAudioContext();
+        setTimeout(playSelectedSound,20);
+      }
+    });
+
+    soundPreview?.addEventListener('click',()=>{
+      if(!soundEnabled){
+        soundEnabled=true;
+        try{localStorage.setItem(SOUND_KEY,'on')}catch(_){}
+        paintSoundControls();
+      }
+      ensureAudioContext();
+      setTimeout(playSelectedSound,20);
+    });
+
+    document.addEventListener('click',e=>{
+      if(!soundControl?.contains(e.target)&&soundPanel&&!soundPanel.hidden){
+        soundPanel.hidden=true;
+        soundSettings?.setAttribute('aria-expanded','false');
+      }
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'&&soundPanel&&!soundPanel.hidden){
+        soundPanel.hidden=true;
+        soundSettings?.setAttribute('aria-expanded','false');
+        soundSettings?.focus();
+      }
+    });
+
+    /* 왼쪽 표에 표시할 화면용 연구사업 예시 */
+    const examples=[
+      ['연구데이터 통합 기반','데이터연구팀',180,126,'논문 4편','수행 중'],
+      ['산학 공동연구 플랫폼','산학협력팀',240,168,'협약 8건','수행 중'],
+      ['실증 및 성과 검증','실증지원팀',150,63,'실증 3건','자료 수집'],
+      ['국제 공동연구 네트워크','국제협력팀',120,54,'교류 5회','협약 진행'],
+      ['신진연구자 연구 지원','인재양성팀',90,63,'지원 12명','수행 중'],
+      ['성과 확산 및 기술이전','성과관리팀',80,32,'이전 2건','검토 중'],
+      ['공용 연구장비 운영','연구지원팀',110,77,'활용 56회','수행 중'],
+      ['연구윤리 및 데이터 관리','운영사무국',30,12,'점검 4회','점검 중'],
+      ['정책 연구 및 수요 조사','정책연구팀',100,45,'보고 3건','분석 중'],
+      ['연구사업 운영 및 관리','운영사무국',60,36,'회의 9회','수행 중'],
+      ['지역혁신 기업 공동실증','산학협력팀',210,147,'기업 7개','수행 중'],
+      ['학술논문 게재 지원','학술연구팀',75,48,'논문 16편','게재 확인'],
+      ['연구데이터 품질 검증','데이터연구팀',95,57,'검증 8건','검증 중'],
+      ['핵심기술 특허 출원','성과관리팀',65,39,'출원 5건','출원 완료'],
+      ['대학원생 연구역량 강화','인재양성팀',85,51,'참여 24명','수행 중'],
+      ['산학협력 수요 발굴','산학협력팀',55,22,'면담 18회','조사 중'],
+      ['중간성과 자체평가','평가분석팀',40,28,'평가 6건','검토 중'],
+      ['공개 데이터셋 구축','데이터연구팀',130,78,'공개 4건','구축 중'],
+      ['국제학술대회 참여 지원','국제협력팀',70,42,'발표 9건','수행 중'],
+      ['연구성과 홍보 및 보급','성과관리팀',45,18,'배포 6건','제작 중'],
+      ['연구시설 유지 및 안전','연구지원팀',80,56,'점검 12회','점검 완료'],
+      ['지역사회 연계 연구','정책연구팀',105,63,'과제 5건','수행 중'],
+      ['공동연구 워크숍 운영','운영사무국',35,21,'개최 3회','진행 중'],
+      ['금년도 연구기획','기획전략팀',50,15,'기획 4건','기획 중'],
+      ['차년도 사업기획','기획전략팀',50,15,'기획 15건','완료'],
+      ['차년도 사업기획안 예산','예산전략팀',50,15,'기획 24건','완료'],
+      ['차년도 예산 총액 참고','예산전략팀',80,75,'완료 4건','완료'],
+      ['금년도 사업기획안 예산','예산전략팀',80,25,'기획 25건','기획 중'],
+      ['금년도 예산 총액기획','예산전략팀',950,25,'기획 25건','기획 중'],
+      ['공공과학기술 연구기획','기획전략팀',510,45,'기획 2건','기획 중'],
+      ['공공과학혁신 연구기획','기획전략팀',590,1205,'기획 8건','기획 중'],
+      ['과학기술선도분야 연구기획','기획전략팀',520,155,'기획 70건','기획 중'],
+      
+    ];
+
+    const fmt=n=>n.toLocaleString('ko-KR');
+
+    const make=(tag,text)=>{
+      const n=document.createElement(tag);
+      n.textContent=text;
+      return n;
+    };
+
+    let query='';
+    let attention=false;
+    let reading=false;
+    let timer;
+    let followBottom=true;
+    let lastContext='';
+    let lastMessage='';
+    let lastSelf=S.load()?.self||null;
+
+    function draw(){
+      const body=$('xl-body');
+      body.replaceChildren();
+
+      const headers=[
+        '세부 연구과제','책임부서','예산(백만원)',
+        '집행(백만원)','집행률','연구성과','진행 상태'
+      ];
+
+      const rows=examples
+        .map((r,i)=>({r,i}))
+        .filter(({r})=>r.join(' ').includes(query));
+
+      function row(values,number,header=false){
+        const tr=make('tr','');
+        tr.append(make('th',number));
+
+        values.forEach((text,j)=>{
+          const td=make('td',text);
+          td.title=text;
+          td.dataset.cell=String.fromCharCode(65+j)+number;
+          td.tabIndex=-1;
+
+          if(header){
+            td.className='xl-header';
+          }else if(j===4){
+            td.className=parseFloat(text)>=65?'up':'down';
+          }
+
+          tr.append(td);
+        });
+
+        body.append(tr);
+      }
+
+      row(headers,1,true);
+
+      rows.forEach(({r,i})=>{
+        row([
+          r[0],
+          r[1],
+          fmt(r[2]),
+          fmt(r[3]),
+          (r[3]/r[2]*100).toFixed(1)+'%',
+          r[4],
+          r[5]
+        ],i+2);
+      });
+
+      for(let n=0;n<Math.max(0,32-rows.length);n++){
+        row(['','','','','','',''],examples.length+2+n);
+      }
+
+      const cells=body.querySelectorAll('td');
+      if(cells.length>7)cells[7].tabIndex=0;
+
+      const budget=rows.reduce((n,{r})=>n+r[2],0);
+      const spent=rows.reduce((n,{r})=>n+r[3],0);
+
+      $('xl-total').textContent=
+        '총예산 '+fmt(budget)+
+        '　 │　 집행 '+fmt(spent)+
+        '　 │　 집행률 '+
+        (budget?(spent/budget*100).toFixed(1):'0')+'%';
+    }
+
+    function select(cell){
+      if(!cell)return;
+
+      sheet.querySelectorAll('td[tabindex="0"]').forEach(c=>{
+        c.tabIndex=-1;
+      });
+
+      cell.tabIndex=0;
+      $('xl-cell').textContent=cell.dataset.cell;
+      $('xl-value').textContent=cell.textContent;
+    }
+
+    $('xl-body').addEventListener('click',e=>{
+      select(e.target.closest('td'));
+    });
+
+    $('xl-body').addEventListener('focusin',e=>{
+      if(e.target.matches('td'))select(e.target);
+    });
+
+    $('xl-body').addEventListener('keydown',e=>{
+      const delta={
+        ArrowLeft:-1,
+        ArrowRight:1,
+        ArrowUp:-7,
+        ArrowDown:7
+      }[e.key];
+
+      if(!delta||!e.target.matches('td'))return;
+
+      e.preventDefault();
+      const cells=[...$('xl-body').querySelectorAll('td')];
+      const next=cells[cells.indexOf(e.target)+delta];
+
+      if(next){
+        select(next);
+        next.focus();
+      }
+    });
+
+    $('xl-search').addEventListener('input',e=>{
+      query=e.target.value.trim();
+      draw();
+    });
+
+    $('xl-show-sheet').onclick=()=>{
+      sheet.classList.add('xl-open');
+      $('xl-close-sheet').focus();
+    };
+
+    $('xl-close-sheet').onclick=()=>{
+      sheet.classList.remove('xl-open');
+      $('xl-show-sheet').focus();
+    };
+
+    document.querySelectorAll('[data-tab]').forEach(b=>{
+      b.addEventListener('click',()=>{
+        sheet.classList.remove('xl-open');
+      });
+    });
+
+    document.querySelectorAll('[data-panel]').forEach(b=>{
+      b.onclick=()=>{
+        const area=document.querySelector('.xl-pivot-scroll');
+        const target=document.querySelector('.'+b.dataset.panel);
+
+        area.scrollTop+=
+          target.getBoundingClientRect().top-
+          area.getBoundingClientRect().top-6;
+      };
+    });
+
+    /* 기존 대화방 열기 동작을 사용해 첫 미독 메시지로 이동 */
+    const unread=$('xl-first-unread');
+
+    unread.onclick=()=>{
+      const state=S.load();
+      const target=
+        state?.unread?.find(u=>u.roomId===state.roomId)||
+        state?.unread?.[0];
+
+      if(target){
+        [...document.querySelectorAll('[data-room]')]
+          .find(b=>b.dataset.room===target.roomId)?.click();
+      }
+    };
+
+    function layout(){
+      const members=!$('page-members').hidden;
+      workspace.classList.toggle('xl-members-open',members);
+      if(members)sheet.classList.remove('xl-open');
+    }
+
+    new MutationObserver(layout).observe($('page-members'),{
+      attributes:true,
+      attributeFilter:['hidden']
+    });
+
+    const nativeChat=()=>!!document.querySelector(
+      '[data-tab="chat"][aria-current]'
+    );
+
+    function stopReading(){
+      attention=false;
+
+      if(wide.matches&&nativeChat()){
+        document.querySelector('[data-tab="home"]').click();
+      }
+    }
+
+    for(const el of [
+      sheet,
+      $('page-home'),
+      document.querySelector('.xl-chrome'),
+      document.querySelector('.xl-formula')
+    ]){
+      for(const type of ['pointerdown','focusin']){
+        el.addEventListener(type,stopReading);
+      }
+    }
+
+    const schedule=()=>{
+      clearTimeout(timer);
+      timer=setTimeout(read,500);
+    };
+
+    for(const type of ['pointerdown','focusin']){
+      chat.addEventListener(type,()=>{
+        attention=true;
+        schedule();
+      });
+    }
+
+    scroller.addEventListener('scroll',()=>{
+      followBottom=
+        scroller.scrollHeight-
+        scroller.scrollTop-
+        scroller.clientHeight<60;
+
+      schedule();
+    },{passive:true});
+
+    document.addEventListener('visibilitychange',schedule);
+    window.addEventListener('focus',schedule);
+
+    /*
+      데스크톱에서는 대화창이 항상 보이므로,
+      사용자가 대화 영역을 선택했을 때 실제 보이는 메시지만 읽음 처리.
+    */
+    async function read(){
+      if(
+        !wide.matches||
+        !attention||
+        reading||
+        document.visibilityState==='hidden'||
+        !document.hasFocus()||
+        !$('modal').hidden||
+        !$('page-members').hidden||
+        workspace.hidden||
+        nativeChat()
+      )return;
+
+      const state=S.load();
+
+      if(
+        !state||
+        state.loading||
+        S.info().status!=='connected'
+      )return;
+
+      const rect=scroller.getBoundingClientRect();
+      const area=workspace.getBoundingClientRect();
+      const top=Math.max(rect.top,area.top,0);
+      const bottom=Math.min(
+        rect.bottom,
+        area.bottom,
+        window.innerHeight
+      );
+
+      if(rect.height<=0||bottom<=top)return;
+
+      const ids=[
+        ...$('chat-messages').querySelectorAll('[data-message]')
+      ].filter(el=>{
+        const r=el.getBoundingClientRect();
+
+        return (
+          r.bottom>top&&
+          r.top<bottom&&
+          state.messages.some(m=>
+            m.id===el.dataset.message&&m.unread
+          )
+        );
+      }).map(el=>el.dataset.message);
+
+      if(!ids.length)return;
+
+      reading=true;
+
+      try{
+        await S.markRead(ids);
+      }catch(e){
+        $('message-error').textContent=e.message;
+      }finally{
+        reading=false;
+      }
+    }
+
+    function sync(state){
+      $('xl-current-date').textContent=
+        $('today-month').textContent+' '+
+        $('today-number').textContent+'일 '+
+        $('today-weekday').textContent;
+
+      unread.hidden=!state?.unread?.length;
+      updateUnreadIndicators(!!state?.unread?.length);
+
+      if(lastSelf!==state?.self){
+        attention=false;
+        query='';
+        $('xl-search').value='';
+        sheet.classList.remove('xl-open');
+        draw();
+      }
+
+      lastSelf=state?.self;
+
+      const context=state
+        ?state.roomId+'|'+state.day
+        :'';
+
+      const latestMessage=state?.messages?.at(-1)||null;
+      const latest=latestMessage?.id||'';
+
+      /* 새로 도착한 읽지 않은 메시지에서만 조용한 '찰칵' 소리 */
+      maybePlayIncomingSound(state,latestMessage);
+
+      if(
+        wide.matches&&
+        state&&
+        !state.loading&&
+        !nativeChat()&&
+        latest!==lastMessage
+      ){
+        if(
+          context===lastContext&&
+          attention&&
+          followBottom
+        ){
+          scroller.scrollTop=scroller.scrollHeight;
+        }else if(context===lastContext&&attention){
+          $('new-message-hint').hidden=false;
+        }
+      }
+
+      lastContext=context;
+      lastMessage=latest;
+
+      schedule();
+      layout();
+    }
+
+    S.subscribe(sync);
+
+    wide.addEventListener('change',()=>{
+      attention=false;
+      sheet.classList.remove('xl-open');
+      layout();
+    });
+
+    draw();
+    sync(S.load());
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',start,{once:true});
+  }else{
+    start();
+  }
+})();
+</script>
+
+<script id="workspace-theme-script">
+(function(){
+  'use strict';
+
+  const KEY='researchtalk.workspaceTheme';
+  const THEMES=new Set(['excel','hwp']);
+  const $=id=>document.getElementById(id);
+
+  function savedTheme(){
+    try{
+      const value=localStorage.getItem(KEY);
+      return THEMES.has(value)?value:'excel';
+    }catch(_){
+      return 'excel';
+    }
+  }
+
+  function applyTheme(theme,save=true){
+    if(!THEMES.has(theme))theme='excel';
+
+    document.body.dataset.workspaceTheme=theme;
+    document.documentElement.dataset.workspaceTheme=theme;
+
+    document.querySelectorAll('[data-workspace-theme]').forEach(button=>{
+      if(button.tagName!=='BUTTON')return;
+      button.setAttribute('aria-pressed',String(button.dataset.workspaceTheme===theme));
+    });
+
+    const filename=document.querySelector('.xl-filename');
+    if(filename){
+      filename.textContent=theme==='hwp'
+        ?'연구사업단_과제관리_총괄현황.hwp ▾'
+        :'연구사업단_과제관리_월별현황.xlsx ▾';
+    }
+
+    const mark=document.querySelector('.app-header .brand-mark');
+    if(mark)mark.textContent=theme==='hwp'?'한':'X';
+
+    const meta=document.querySelector('meta[name="theme-color"]');
+    if(meta)meta.setAttribute('content',theme==='hwp'?'#1683cf':'#107c41');
+
+    document.title=theme==='hwp'
+      ?'연구사업단_과제관리_총괄현황.hwp · researchtalk'
+      :'연구사업단_과제관리_월별현황.xlsx · researchtalk';
+
+    /* 탭 아이콘도 현재 작업 화면에 맞춰 즉시 전환한다.
+       단, 읽지 않은 메시지가 있으면 빨간 점이 계속 우선 표시된다. */
+    if(typeof window.RTRefreshBrowserFavicon==='function'){
+      window.RTRefreshBrowserFavicon();
+    }
+
+    if(save){
+      try{localStorage.setItem(KEY,theme)}catch(_){}
+    }
+  }
+
+  function init(){
+    applyTheme(savedTheme(),false);
+
+    const switcher=$('workspace-mode-switch');
+    if(!switcher)return;
+
+    switcher.addEventListener('click',event=>{
+      const button=event.target.closest('button[data-workspace-theme]');
+      if(!button)return;
+      applyTheme(button.dataset.workspaceTheme,true);
+    });
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init,{once:true});
+  }else{
+    init();
+  }
+})();
+</script>
+
+
+<script id="hwp-v5-review-script">
+(function(){
+  'use strict';
+  function initHwpReview(){
+    const form=document.getElementById('hwp-review-form');
+    const input=document.getElementById('hwp-review-input');
+    const list=document.getElementById('hwp-review-list');
+    if(!form||!input||!list||form.dataset.ready)return;
+    form.dataset.ready='1';
+    form.addEventListener('submit',function(e){
+      e.preventDefault();
+      const value=input.value.trim();
+      if(!value)return;
+      const item=document.createElement('article');
+      item.className='hwp-review-note';
+      const now=new Date();
+      const hh=String(now.getHours()).padStart(2,'0');
+      const mm=String(now.getMinutes()).padStart(2,'0');
+      item.innerHTML='<div class="hwp-review-meta"><b>[메모] 나</b><time>'+hh+':'+mm+'</time></div><p></p>';
+      item.querySelector('p').textContent=value;
+      list.appendChild(item);
+      input.value='';
+      list.scrollTop=list.scrollHeight;
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initHwpReview,{once:true});
+  else initHwpReview();
+})();
+</script>
+
+</body>
+</html>
