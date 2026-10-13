@@ -171,7 +171,25 @@
     try{await S.send(text);if(data?.self===self&&S.draft(roomId)===text)S.setDraft(roomId,'');if(data?.self===self&&data.roomId===roomId&&$('message-text').value===text){$('message-text').value='';$('message-text').style.height='auto';}scrollBottom();}
     catch(error){$('message-error').textContent=error.message;}finally{sending=false;renderChat();}
   };
-  $('message-text').onkeydown=e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!e.isComposing){e.preventDefault();$('message-form').requestSubmit();}};
+
+  // Enter: 메시지 전송
+  // Ctrl + Enter: 줄바꿈
+  // Shift + Enter: 줄바꿈
+  // 한글 조합 중 Enter: 전송 방지
+  $('message-text').onkeydown=e=>{
+    if(e.isComposing||e.keyCode===229)return;
+
+    if(
+      e.key==='Enter' &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.shiftKey
+    ){
+      e.preventDefault();
+      $('message-form').requestSubmit();
+    }
+  };
+
   $('new-message-hint').onclick=scrollBottom;
   $('summary-open').onclick=()=>modal('하루 대화 요약',body=>{
     if(!g.RESEARCH_CONFIG.aiEnabled){body.append(node('p','', 'AI 요약은 아직 연결 전이에요. 날짜별 대화 보관과 파일 저장은 지금 사용할 수 있어요.'));return;}
