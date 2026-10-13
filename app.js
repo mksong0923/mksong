@@ -107,7 +107,7 @@
     const requests=$('dm-requests');requests.replaceChildren();
     const received=data.rooms.filter(r=>r.kind==='direct'&&r.status==='pending'&&r.invitedBy!==data.self);
     $('request-badge').hidden=!received.length;$('request-badge').textContent=received.length;
-    for(const r of received){const box=node('div','request-card');box.append(node('h2','',roomName(r)+'의 개인 대화 초대'),node('p','muted','수락하면 두 사람만 대화를 볼 수 있어요.'));const actions=node('div','inline-actions');for(const [label,accept] of [['수락',true],['거절',false]]){const b=button(label,accept?'soft-button':'text-button',()=>action(async()=>{await S.apply('dm.respond',{roomId:r.id,accept});if(accept)await openRoom(r.id);},b));b.disabled=!connected();actions.append(b);}box.append(actions);requests.append(box);}
+    for(const r of received){const box=node('div','request-card');box.append(node('h2','',roomName(r)+'의 개인 대화 초대'),node('p','', '수락하면 두 사람만 대화를 볼 수 있어요.'));const actions=node('div','inline-actions');for(const [label,accept] of [['수락',true],['거절',false]]){const b=button(label,accept?'soft-button':'text-button',()=>action(async()=>{await S.apply('dm.respond',{roomId:r.id,accept});if(accept)await openRoom(r.id);},b));b.disabled=!connected();actions.append(b);}box.append(actions);requests.append(box);}
     const list=$('member-list');list.replaceChildren();
     for(const m of data.members){const li=node('li','member-row'),text=node('div','member-info');text.append(node('strong','',m.name),node('p','',m.id===data.self?'나':'함께하는 참여자'));li.append(avatar(m.id),text);if(m.id!==data.self)li.append(dmButton(m));list.append(li);}
     $('rename-open').disabled=!connected();
@@ -172,10 +172,14 @@
     catch(error){$('message-error').textContent=error.message;}finally{sending=false;renderChat();}
   };
 
-  // Enter: 메시지 전송
-  // Ctrl + Enter: 줄바꿈
-  // Shift + Enter: 줄바꿈
-  // 한글 조합 중 Enter: 전송 및 줄바꿈 방지
+  // =====================================================
+  // 채팅 Enter 키 기능 수정
+  //
+  // Enter             : 메시지 전송
+  // Ctrl + Enter      : 줄바꿈
+  // Shift + Enter     : 줄바꿈
+  // 한글 조합 중 Enter : 전송 및 줄바꿈 방지
+  // =====================================================
 
   const messageInput = $('message-text');
   const messageForm = $('message-form');
@@ -183,34 +187,36 @@
   let messageComposing = false;
   let compositionJustEnded = false;
 
-  // 한글 입력 조합 시작
+  // 한글 입력 시작
   messageInput.addEventListener('compositionstart', () => {
     messageComposing = true;
     compositionJustEnded = false;
   });
 
-  // 한글 입력 조합 종료
+  // 한글 입력 종료
   messageInput.addEventListener('compositionend', () => {
     messageComposing = false;
     compositionJustEnded = true;
   });
 
-  // Enter 키를 놓으면 조합 종료 상태 초기화
+  // 한글 입력 확정 이후 상태 정리
   messageInput.addEventListener('keyup', e => {
     if (e.key === 'Enter') {
       compositionJustEnded = false;
     }
   });
 
-  // 메시지 입력 키 처리
+  // Enter 키 처리
   messageInput.addEventListener('keydown', e => {
 
+    // Enter 키가 아니면 처리하지 않음
     if (e.key !== 'Enter') {
       compositionJustEnded = false;
       return;
     }
 
-    // Ctrl + Enter / Shift + Enter → 줄바꿈
+    // Ctrl + Enter / Shift + Enter / Command + Enter
+    // textarea의 기본 줄바꿈 허용
     if (e.ctrlKey || e.shiftKey || e.metaKey) {
       return;
     }
@@ -218,13 +224,9 @@
     // 일반 Enter의 기본 줄바꿈 차단
     e.preventDefault();
 
-    // 한글 조합 중에는 전송하지 않음
-    if (
-      messageComposing ||
-      e.isComposing ||
-      e.keyCode === 229 ||
-      compositionJustEnded
-    ) {
+
+    // 키를 길게 눌러 중복 전송되는 현상 방지
+    if (e.repeat) {
       return;
     }
 
@@ -233,12 +235,12 @@
       return;
     }
 
-    // 전송 중이거나 입력할 수 없는 상태에서는 전송 방지
+    // 이미 전송 중이거나 입력창이 비활성화된 경우
     if (messageInput.disabled || sending) {
       return;
     }
 
-    // 현재 대화방이 전송 가능한 상태인지 확인
+    // 메시지 전송 가능 상태 확인
     if (
       !data ||
       data.loading ||
@@ -253,6 +255,10 @@
 
   });
 
+  // =====================================================
+  // Enter 키 기능 수정 끝
+  // =====================================================
+
   $('new-message-hint').onclick=scrollBottom;
   $('summary-open').onclick=()=>modal('하루 대화 요약',body=>{
     if(!g.RESEARCH_CONFIG.aiEnabled){body.append(node('p','', 'AI 요약은 아직 연결 전이에요. 날짜별 대화 보관과 파일 저장은 지금 사용할 수 있어요.'));return;}
@@ -261,7 +267,7 @@
     const form=node('form','stack-form');form.innerHTML='<label for="summary-code">요약 연결 코드</label><input id="summary-code" type="password" autocomplete="off" required /><p id="summary-error" class="field-error" role="alert"></p><button class="primary-button">요약 만들기</button>';body.append(form);
     form.onsubmit=async e=>{e.preventDefault();const b=form.querySelector('button');if(b.disabled)return;b.disabled=true;b.textContent='요약하는 중…';const code=$('summary-code').value;try{const text=await g.RTSummary.summarize(source,code);if(S.load()?.self!==source.self)throw new Error('계정이 바뀌었어요.');await S.apply('day.summary',{roomId:source.roomId,day:source.day,text,revision});if(form.isConnected)closeModal();toast('요약을 저장했어요.');}catch(error){if(form.isConnected){$('summary-error').textContent=error.message;b.disabled=false;b.textContent='다시 요약';}}};
   });
-  $('invite-create').onclick=()=>action(async()=>{await S.apply('invite.create',{});toast('초대 링크를 만들었어요. 한 사람에게 보내주세요.');},$('invite-create'));
+  $('invite-create').onclick=()=>action(async()=>{await S.apply('invite.create',{});toast('초대 링크를 만들었어요.');},$('invite-create'));
   $('rename-open').onclick=()=>modal('내 이름 바꾸기',body=>{const form=node('form','stack-form');form.innerHTML='<label for="new-name">대화방에서 쓸 이름</label><input id="new-name" maxlength="20" required /><button class="primary-button">이름 저장</button>';body.append(form);$('new-name').value=member(data.self).name;form.onsubmit=e=>{e.preventDefault();action(async()=>{await S.apply('profile.rename',{name:$('new-name').value.trim()});closeModal();},form.querySelector('button'));};});
   $('install-help').onclick=()=>modal('홈 화면에 추가',body=>{body.append(node('p','','아이폰: 사파리에서 공유 버튼 → 홈 화면에 추가를 눌러주세요. ‘웹 앱으로 열기’가 보이면 켜주세요.'),node('p','','안드로이드: 크롬 메뉴 → 홈 화면에 추가 또는 앱 설치를 눌러주세요.'),node('p','muted','설치된 아이콘의 이름은 researchtalk예요.'));});
   $('sign-out').onclick=()=>modal('로그아웃할까요?',body=>{body.append(node('p','','이 기기의 로그인과 임시 보관 기록을 지워요. 서버에 저장한 대화와 일정은 그대로 남아요.'));const b=button('로그아웃','primary-button',()=>action(async()=>{await S.logout();closeModal();$('message-text').value='';$('auth-password').value='';changeTab('home');},b));b.style.marginTop='20px';body.append(b);});
