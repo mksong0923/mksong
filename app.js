@@ -173,50 +173,84 @@
   };
 
   // Enter: 메시지 전송
-  // Ctrl/Shift/Command + Enter: 줄바꿈
-  // 한글 입력 조합 확정 시 Enter: 전송 방지
-  const messageInput=$('message-text');
-  const messageForm=$('message-form');
-  let messageComposing=false;
-  let compositionJustEnded=false;
+  // Ctrl + Enter: 줄바꿈
+  // Shift + Enter: 줄바꿈
+  // 한글 조합 중 Enter: 전송 및 줄바꿈 방지
 
-  messageInput.addEventListener('compositionstart',()=>{
-    messageComposing=true;
-    compositionJustEnded=false;
+  const messageInput = $('message-text');
+  const messageForm = $('message-form');
+
+  let messageComposing = false;
+  let compositionJustEnded = false;
+
+  // 한글 입력 조합 시작
+  messageInput.addEventListener('compositionstart', () => {
+    messageComposing = true;
+    compositionJustEnded = false;
   });
 
-  messageInput.addEventListener('compositionend',()=>{
-    messageComposing=false;
-    compositionJustEnded=true;
+  // 한글 입력 조합 종료
+  messageInput.addEventListener('compositionend', () => {
+    messageComposing = false;
+    compositionJustEnded = true;
   });
 
-  messageInput.addEventListener('keyup',e=>{
-    if(e.key==='Enter')compositionJustEnded=false;
+  // Enter 키를 놓으면 조합 종료 상태 초기화
+  messageInput.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      compositionJustEnded = false;
+    }
   });
 
-  messageInput.addEventListener('keydown',e=>{
-    if(e.key!=='Enter'){
-      compositionJustEnded=false;
+  // 메시지 입력 키 처리
+  messageInput.addEventListener('keydown', e => {
+
+    if (e.key !== 'Enter') {
+      compositionJustEnded = false;
       return;
     }
 
-    if(
-      messageComposing ||
-      e.isComposing ||
-      e.keyCode===229 ||
-      compositionJustEnded
-    ){
+    // Ctrl + Enter / Shift + Enter → 줄바꿈
+    if (e.ctrlKey || e.shiftKey || e.metaKey) {
       return;
     }
 
-    if(e.ctrlKey||e.metaKey||e.shiftKey)return;
-
+    // 일반 Enter의 기본 줄바꿈 차단
     e.preventDefault();
 
-    if(messageInput.disabled||sending||!messageInput.value.trim())return;
-    if(!data||data.loading||data.day!==D.today()||!connected())return;
+    // 한글 조합 중에는 전송하지 않음
+    if (
+      messageComposing ||
+      e.isComposing ||
+      e.keyCode === 229 ||
+      compositionJustEnded
+    ) {
+      return;
+    }
 
+    // 빈 메시지는 전송하지 않음
+    if (!messageInput.value.trim()) {
+      return;
+    }
+
+    // 전송 중이거나 입력할 수 없는 상태에서는 전송 방지
+    if (messageInput.disabled || sending) {
+      return;
+    }
+
+    // 현재 대화방이 전송 가능한 상태인지 확인
+    if (
+      !data ||
+      data.loading ||
+      data.day !== D.today() ||
+      !connected()
+    ) {
+      return;
+    }
+
+    // 메시지 전송
     messageForm.requestSubmit();
+
   });
 
   $('new-message-hint').onclick=scrollBottom;
