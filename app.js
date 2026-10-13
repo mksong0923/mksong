@@ -173,22 +173,51 @@
   };
 
   // Enter: 메시지 전송
-  // Ctrl + Enter: 줄바꿈
-  // Shift + Enter: 줄바꿈
-  // 한글 조합 중 Enter: 전송 방지
-  $('message-text').onkeydown=e=>{
-    if(e.isComposing||e.keyCode===229)return;
+  // Ctrl/Shift/Command + Enter: 줄바꿈
+  // 한글 입력 조합 확정 시 Enter: 전송 방지
+  const messageInput=$('message-text');
+  const messageForm=$('message-form');
+  let messageComposing=false;
+  let compositionJustEnded=false;
+
+  messageInput.addEventListener('compositionstart',()=>{
+    messageComposing=true;
+    compositionJustEnded=false;
+  });
+
+  messageInput.addEventListener('compositionend',()=>{
+    messageComposing=false;
+    compositionJustEnded=true;
+  });
+
+  messageInput.addEventListener('keyup',e=>{
+    if(e.key==='Enter')compositionJustEnded=false;
+  });
+
+  messageInput.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'){
+      compositionJustEnded=false;
+      return;
+    }
 
     if(
-      e.key==='Enter' &&
-      !e.ctrlKey &&
-      !e.metaKey &&
-      !e.shiftKey
+      messageComposing ||
+      e.isComposing ||
+      e.keyCode===229 ||
+      compositionJustEnded
     ){
-      e.preventDefault();
-      $('message-form').requestSubmit();
+      return;
     }
-  };
+
+    if(e.ctrlKey||e.metaKey||e.shiftKey)return;
+
+    e.preventDefault();
+
+    if(messageInput.disabled||sending||!messageInput.value.trim())return;
+    if(!data||data.loading||data.day!==D.today()||!connected())return;
+
+    messageForm.requestSubmit();
+  });
 
   $('new-message-hint').onclick=scrollBottom;
   $('summary-open').onclick=()=>modal('하루 대화 요약',body=>{
